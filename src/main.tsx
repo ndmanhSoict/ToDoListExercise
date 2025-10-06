@@ -7,6 +7,8 @@ import { routeTree } from './routeTree.gen';
 
 const router = createRouter({ routeTree });
 
+import './index.css';
+
 // Khai báo type an toàn
 declare module '@tanstack/react-router' {
   interface Register {
