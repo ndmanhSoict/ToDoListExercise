@@ -1,0 +1,5 @@
+# ESLint check
+npx eslint . --ext .ts,.tsx
+
+# Prettier check
+npx prettier --check .
