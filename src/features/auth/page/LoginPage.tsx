@@ -11,6 +11,7 @@ export default function LoginPage() {
           type="email"
           name="email"
           iconleft={<i className="material-icons">mail_outline</i>}
+          placeholder="Input your email"
         />
         {/* <br className="my-4" /> */}
         <InputAuth
@@ -25,6 +26,7 @@ export default function LoginPage() {
               {hidePassword ? 'visibility_off' : 'visibility'}
             </i>
           }
+          placeholder="Input your password"
         />
         {/* <br className="my-4" /> */}
         <a
