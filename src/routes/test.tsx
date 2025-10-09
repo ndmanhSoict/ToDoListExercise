@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import TestComponent from '../TestComponent';
+import ToDoPage from '../features/todo/page/ToDoPage';
 export const Route = createFileRoute('/test')({
   component: () => (
     <>
-      <TestComponent />
+      <ToDoPage />
     </>
   ),
 });
