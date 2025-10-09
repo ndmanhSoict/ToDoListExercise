@@ -64,7 +64,7 @@ export default function LoginPage() {
           <span className="text-gray-600">Don't have an account? </span>
           <a
             className="text-blue-600 italic underline cursor-pointer hover:text-blue-800 active:text-red-600"
-            href="#"
+            href="/register"
           >
             Register here
           </a>
