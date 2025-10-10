@@ -4,7 +4,10 @@ import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { registerSchema, type RegisterSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from '@tanstack/react-router';
+
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
@@ -12,6 +15,7 @@ export default function LoginPage() {
 
   const onSubmit = (data: RegisterSchema) => {
     console.log('Dữ liệu hợp lệ:', data);
+    navigate({ to: '/test' });
   };
   return (
     <>
