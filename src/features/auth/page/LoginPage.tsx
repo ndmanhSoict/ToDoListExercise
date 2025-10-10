@@ -5,9 +5,13 @@ import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../../store/strore';
+import { setUser } from '../../../store/userSlice';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const [hidePassword, setHidePassword] = useState(true);
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -15,6 +19,8 @@ export default function LoginPage() {
 
   const onSubmit = (data: LoginSchema) => {
     console.log('Dữ liệu hợp lệ:', data);
+    const getUserName = data.email.slice(0, data.email.indexOf('@'));
+    dispatch(setUser(getUserName));
     navigate({ to: '/todo' });
   };
   return (

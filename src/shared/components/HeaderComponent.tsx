@@ -1,18 +1,19 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
 import ButtonBasic from './ButtonBasic';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../store/strore';
+import { deleteUser } from '../../store/userSlice';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
-  const [userName] = useState('NguyenDucManh');
-  function handleLogOut() {
-    localStorage.clear();
-  }
+  const userName = useSelector((state: RootState) => state.user.userName);
+  console.log(userName);
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <div className="flex justify-around items-center bg-white">
       <h1 className="!leading-none">TO DO APP</h1>
-      <nav className="flex gap-4">
+      <nav className="flex gap-4 [&>*]:font-semibold [&>*]:hover:underline [&>*]:hover:text-blue-400">
         <Link to="/">Home</Link>
         <Link to="/todo">To Do List</Link>
         <Link to="/about">About</Link>
@@ -20,7 +21,18 @@ export default function HeaderComponent() {
       </nav>
       {userName ? (
         <div>
-          <span>Hi, {userName} !</span>
+          <span>
+            Hi, {userName} !{' '}
+            <button
+              className="underline italic hover:cursor-pointer hover:text-blue-400"
+              onClick={() => {
+                dispatch(deleteUser());
+                navigate({ to: '/' });
+              }}
+            >
+              Logout
+            </button>
+          </span>
         </div>
       ) : (
         <div className="flex gap-2">
@@ -35,7 +47,6 @@ export default function HeaderComponent() {
             title="Register"
             className="bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow h-fit"
             onClick={() => {
-              handleLogOut();
               navigate({ to: '/register' });
             }}
           ></ButtonBasic>

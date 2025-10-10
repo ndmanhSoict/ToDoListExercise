@@ -57,7 +57,7 @@ export default function ToDoPage() {
     }
   }
 
-  console.log(allTasks);
+  // console.log(allTasks);
   return (
     <div className="w-full h-screen flex overflow-x-auto p-4">
       {Object.keys(allTasks).map((key) => {
