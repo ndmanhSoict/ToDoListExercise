@@ -4,7 +4,7 @@ import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { registerSchema, type RegisterSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -80,12 +80,12 @@ export default function RegisterPage() {
 
         <div className="text-center mt-22">
           <span className="text-gray-600">You have an account? </span>
-          <a
+          <Link
             className="text-blue-600 italic underline cursor-pointer hover:text-blue-800 active:text-red-600"
-            href="/login"
+            to="/login"
           >
             Login now
-          </a>
+          </Link>
         </div>
       </div>
     </>

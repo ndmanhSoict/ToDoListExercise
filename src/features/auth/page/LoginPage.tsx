@@ -4,7 +4,7 @@ import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -66,12 +66,12 @@ export default function LoginPage() {
 
         <div className="text-center mt-22">
           <span className="text-gray-600">Don't have an account? </span>
-          <a
+          <Link
             className="text-blue-600 italic underline cursor-pointer hover:text-blue-800 active:text-red-600"
-            href="/login"
+            to="/register"
           >
-            Login here
-          </a>
+            Register here
+          </Link>
         </div>
       </div>
     </>
