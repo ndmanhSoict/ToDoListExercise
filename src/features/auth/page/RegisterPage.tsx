@@ -4,8 +4,10 @@ import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { registerSchema, type RegisterSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from '@tanstack/react-router';
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const form = useForm<RegisterSchema>({
@@ -14,6 +16,7 @@ export default function RegisterPage() {
 
   const onSubmit = (data: RegisterSchema) => {
     console.log('Dữ liệu hợp lệ:', data);
+    navigate({ to: '/login' });
   };
   return (
     <>
@@ -23,7 +26,7 @@ export default function RegisterPage() {
           <InputAuth
             form={form}
             type="email"
-            name="email"
+            label="email"
             namevalidate="email"
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
@@ -33,7 +36,7 @@ export default function RegisterPage() {
           <InputAuth
             form={form}
             type={hidePassword ? 'password' : 'text'}
-            name="password"
+            label="password"
             namevalidate="password"
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
@@ -51,7 +54,7 @@ export default function RegisterPage() {
           <InputAuth
             form={form}
             type={hideConfirmPassword ? 'password' : 'text'}
-            name="Confirm password"
+            label="Confirm password"
             namevalidate="confirmPassword"
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={

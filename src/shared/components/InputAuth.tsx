@@ -1,12 +1,11 @@
 import { type ReactNode } from 'react';
-import type { UseFormReturn } from 'react-hook-form';
+import type { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
-import type { RegisterSchema } from '../../features/auth/schemas/authSchema';
 
-export default function InputAuth({
+export default function InputAuth<T extends FieldValues>({
   form,
   type,
-  name,
+  label,
   iconleft,
   iconright,
   className,
@@ -14,15 +13,15 @@ export default function InputAuth({
   required,
   namevalidate,
 }: {
-  form: UseFormReturn<RegisterSchema>;
+  form: UseFormReturn<T>;
   type: string;
-  name: string;
+  label: string;
   required?: boolean;
   iconleft?: ReactNode;
   iconright?: ReactNode;
   className?: string;
   placeholder?: string;
-  namevalidate?: keyof RegisterSchema | undefined;
+  namevalidate?: Path<T>;
 }) {
   const {
     register,
@@ -36,20 +35,19 @@ export default function InputAuth({
 
   return (
     <div className={twMerge('mb-4 ', className)}>
-      <label htmlFor={name} className="block mb-1">
-        {name.charAt(0).toUpperCase() + name.slice(1)}:
+      <label htmlFor={label} className="block mb-1">
+        {label.charAt(0).toUpperCase() + label.slice(1)}:
       </label>
-      <div className="relative">
+      <div className="relative ">
         {iconleft && (
           <div className="absolute left-2 top-1/2 transform -translate-y-1/2 leading-none">
             {iconleft}
           </div>
         )}
         <input
-          className="border border-gray-300 p-3 rounded-full w-full px-[2.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500 align-middle !leading-none"
+          className="border border-gray-300 p-3 rounded-full w-full px-[2.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500 align-middle !leading-none outline outline-transparent hover:outline-blue-400"
           {...(namevalidate ? register(namevalidate) : {})}
           type={type}
-          name={name}
           placeholder={placeholder || ''}
           required={required}
         />

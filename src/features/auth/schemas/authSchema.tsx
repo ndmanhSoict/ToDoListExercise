@@ -18,3 +18,11 @@ export const registerSchema = z
   });
 
 export type RegisterSchema = z.infer<typeof registerSchema>;
+
+export const loginSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+});
+
+export type LoginSchema = z.infer<typeof loginSchema>;
+
+export type AuthSchema = LoginSchema | RegisterSchema;

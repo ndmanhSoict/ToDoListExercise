@@ -2,20 +2,20 @@ import { useState } from 'react';
 import InputAuth from '../../../shared/components/InputAuth';
 import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
-import { registerSchema, type RegisterSchema } from '../schemas/authSchema';
+import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from '@tanstack/react-router';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
-  const form = useForm<RegisterSchema>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: RegisterSchema) => {
+  const onSubmit = (data: LoginSchema) => {
     console.log('Dữ liệu hợp lệ:', data);
-    navigate({ to: '/test' });
+    navigate({ to: '/todo' });
   };
   return (
     <>
@@ -25,7 +25,7 @@ export default function LoginPage() {
           <InputAuth
             form={form}
             type="email"
-            name="email"
+            label="email"
             namevalidate="email"
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
@@ -35,7 +35,7 @@ export default function LoginPage() {
           <InputAuth
             form={form}
             type={hidePassword ? 'password' : 'text'}
-            name="password"
+            label="password"
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i
@@ -68,9 +68,9 @@ export default function LoginPage() {
           <span className="text-gray-600">Don't have an account? </span>
           <a
             className="text-blue-600 italic underline cursor-pointer hover:text-blue-800 active:text-red-600"
-            href="/register"
+            href="/login"
           >
-            Register here
+            Login here
           </a>
         </div>
       </div>

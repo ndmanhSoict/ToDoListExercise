@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root';
+import { Route as TodoRouteImport } from './routes/todo';
 import { Route as TestRouteImport } from './routes/test';
 import { Route as RegisterRouteImport } from './routes/register';
 import { Route as LoginRouteImport } from './routes/login';
 import { Route as AboutRouteImport } from './routes/about';
 import { Route as IndexRouteImport } from './routes/index';
 
+const TodoRoute = TodoRouteImport.update({
+  id: '/todo',
+  path: '/todo',
+  getParentRoute: () => rootRouteImport,
+} as any);
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute;
   '/register': typeof RegisterRoute;
   '/test': typeof TestRoute;
+  '/todo': typeof TodoRoute;
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute;
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute;
   '/register': typeof RegisterRoute;
   '/test': typeof TestRoute;
+  '/todo': typeof TodoRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
@@ -62,13 +70,14 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute;
   '/register': typeof RegisterRoute;
   '/test': typeof TestRoute;
+  '/todo': typeof TodoRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/about' | '/login' | '/register' | '/test';
+  fullPaths: '/' | '/about' | '/login' | '/register' | '/test' | '/todo';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/about' | '/login' | '/register' | '/test';
-  id: '__root__' | '/' | '/about' | '/login' | '/register' | '/test';
+  to: '/' | '/about' | '/login' | '/register' | '/test' | '/todo';
+  id: '__root__' | '/' | '/about' | '/login' | '/register' | '/test' | '/todo';
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -77,10 +86,18 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute;
   RegisterRoute: typeof RegisterRoute;
   TestRoute: typeof TestRoute;
+  TodoRoute: typeof TodoRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/todo': {
+      id: '/todo';
+      path: '/todo';
+      fullPath: '/todo';
+      preLoaderRoute: typeof TodoRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/test': {
       id: '/test';
       path: '/test';
@@ -125,6 +142,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
+  TodoRoute: TodoRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
