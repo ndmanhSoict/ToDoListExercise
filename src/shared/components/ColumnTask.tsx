@@ -1,25 +1,30 @@
+import { useState } from 'react';
 import type { Task } from '../type/TypeTask';
 import TaskComponent from './TaskComponent';
+import type { TaskStatus } from '../type/TypeTask';
 
 export default function ColumnTask({
   header,
   count,
   proptaskList,
+  onDropEvent,
 }: {
-  header: string;
+  header: TaskStatus;
   count: number;
   proptaskList: Task[];
+  onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
   const [taskList, setTaskList] = useState<Task[]>([]);
 
   return (
     <div
-      onDragOver={(e) => e.preventDefault()} // cần thiết!
+      onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
         e.preventDefault();
         const data = e.dataTransfer.getData('id');
-        const fromColumn = e.dataTransfer.getData('fromColumn');
+        const fromColumn = e.dataTransfer.getData('fromColumn') as TaskStatus;
         console.log('Đã thả phần tử:', data, 'từ cột', fromColumn, 'vào cột', header);
+        onDropEvent(data, fromColumn, header);
       }}
       className="flex flex-col w-68 bg-white shadow m-4 rounded p-1 h-fit"
     >

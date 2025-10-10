@@ -14,3 +14,5 @@ export type Task = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type TaskStatus = Task['status'];

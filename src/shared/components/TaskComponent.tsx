@@ -1,5 +1,12 @@
 import type { Task } from '../type/TypeTask';
-export default function TaskComponent({ task, fromColumn }: { task: Task; fromColumn: string }) {
+import type { TaskStatus } from '../type/TypeTask';
+export default function TaskComponent({
+  task,
+  fromColumn,
+}: {
+  task: Task;
+  fromColumn: TaskStatus;
+}) {
   return (
     <div
       className="border p-4 mb-4 rounded bg-white shadow w-56 block mx-auto"

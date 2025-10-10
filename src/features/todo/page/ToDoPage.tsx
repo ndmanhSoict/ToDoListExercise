@@ -2,6 +2,7 @@ import ColumnTask from '../../../shared/components/ColumnTask';
 import { useEffect, useState } from 'react';
 import { fakeTaskList } from '../../../fakeTastList';
 import type { Task } from '../../../shared/type/TypeTask';
+import type { TaskStatus } from '../../../shared/type/TypeTask';
 
 type TaskState = {
   CREATED: Task[];
@@ -44,6 +45,17 @@ export default function ToDoPage() {
     setAllTasks(grouped);
   }, []);
 
+  function callDropEvent(taskid: string, fromColumn: TaskStatus, toColumn: TaskStatus): void {
+    const task = allTasks[fromColumn].find((t) => t.id === taskid);
+    if (task) {
+      setAllTasks((prev) => ({
+        ...prev,
+        [fromColumn]: prev[fromColumn].filter((t) => t.id !== taskid),
+        [toColumn]: [...prev[toColumn], { ...task, status: toColumn }],
+      }));
+    }
+  }
+
   console.log(allTasks);
   return (
     <div className="w-full h-screen flex overflow-x-auto p-4">
@@ -52,9 +64,10 @@ export default function ToDoPage() {
         return (
           <ColumnTask
             key={String(key)}
-            header={key}
+            header={statusKey}
             count={allTasks[statusKey].length}
             proptaskList={allTasks[statusKey]}
+            onDropEvent={callDropEvent}
           />
         );
       })}
