@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { Provider } from 'react-redux';
 import { persistor, store } from './store/strore';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Import route tree được generate tự động
 import { routeTree } from './routeTree.gen';
@@ -19,15 +20,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+//React Query
+const queryClient = new QueryClient();
+
 const rootElement = document.getElementById('root')!;
 if (!rootElement.innerHTML) {
   ReactDOM.createRoot(rootElement).render(
     <StrictMode>
-      <Provider store={store}>
-        <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}>
-          <RouterProvider router={router} />
-        </PersistGate>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}>
+            <RouterProvider router={router} />
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
     </StrictMode>,
   );
 }
