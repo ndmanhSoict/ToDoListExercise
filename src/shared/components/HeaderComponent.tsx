@@ -17,7 +17,7 @@ export default function HeaderComponent() {
         <Link to="/">Home</Link>
         <Link to="/todo">To Do List</Link>
         <Link to="/about">About</Link>
-        <Link to="/">Review</Link>
+        <Link to="/test">Test</Link>
       </nav>
       {userName ? (
         <div>
