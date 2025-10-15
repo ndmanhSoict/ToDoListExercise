@@ -8,6 +8,8 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../../store/strore';
 import { setUser } from '../../../store/userSlice';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { fakeCallAPILogin } from '../api/authAPI';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -17,17 +19,37 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async (email: string) => {
+      const res = await fakeCallAPILogin(email);
+      return res as string;
+    },
+    onSuccess: (data) => {
+      const getUserName = data.slice(0, data.indexOf('@'));
+      dispatch(setUser(getUserName));
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+      navigate({ to: '/todo' });
+    },
+  });
+
   const onSubmit = (data: LoginSchema) => {
-    console.log('Dữ liệu hợp lệ:', data);
-    const getUserName = data.email.slice(0, data.email.indexOf('@'));
-    dispatch(setUser(getUserName));
-    navigate({ to: '/todo' });
+    // console.log('Dữ liệu hợp lệ:', data);
+    mutation.mutate(data.email);
   };
+
   return (
     <>
       <div className="max-w-md mx-auto mt-10 p-6 bg-white border border-gray-300 rounded shadow">
         <form action="" method="post" onSubmit={form.handleSubmit(onSubmit)}>
           <h1 className="block text-center text-2xl font-bold mb-4">Login to start</h1>
+          {mutation.isError && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {mutation.error instanceof Error
+                ? mutation.error.message
+                : 'Login failed. Please try again.'}
+            </div>
+          )}
           <InputAuth
             form={form}
             type="email"
@@ -64,12 +86,11 @@ export default function LoginPage() {
           <div className="mb-4 relative w-full">
             <ButtonBasic
               type="submit"
-              title="Login"
+              title={mutation.isPending ? 'Loading...' : 'Login'}
               className="absolute right-1/2 transform translate-x-1/2 bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow"
             />
           </div>
         </form>
-
         <div className="text-center mt-22">
           <span className="text-gray-600">Don't have an account? </span>
           <Link

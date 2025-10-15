@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { registerSchema, type RegisterSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
+import { useMutation } from '@tanstack/react-query';
+import { fakeCallAPICheckEmail, fakeCallAPIRegister } from '../api/authAPI';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -12,11 +14,37 @@ export default function RegisterPage() {
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
+    mode: 'onTouched',
+  });
+
+  const mutationRegister = useMutation({
+    mutationFn: async (email: string) => {
+      const res = await fakeCallAPIRegister(email);
+      return res as string;
+    },
+    onSuccess: () => {
+      navigate({ to: '/login' });
+    },
+  });
+
+  const mutationCheckEmail = useMutation({
+    mutationFn: async (email: string) => {
+      console.log('da chay vao day');
+      const res = await fakeCallAPICheckEmail(email);
+      return res;
+    },
+    onSuccess: (data) => {
+      console.log('thực thi buosc cuối');
+      if (data === 'Email already exists') {
+        form.setError('email', { type: 'manual', message: 'Email đã tồn tại!' });
+      } else {
+        form.clearErrors('email');
+      }
+    },
   });
 
   const onSubmit = (data: RegisterSchema) => {
-    console.log('Dữ liệu hợp lệ:', data);
-    navigate({ to: '/login' });
+    mutationRegister.mutate(data.email);
   };
   return (
     <>
@@ -31,6 +59,7 @@ export default function RegisterPage() {
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
             required={true}
+            propOnChange={mutationCheckEmail.mutate}
           />
           {/* <br className="my-4" /> */}
           <InputAuth
@@ -72,7 +101,7 @@ export default function RegisterPage() {
           <div className="mb-4 relative w-full">
             <ButtonBasic
               type="submit"
-              title="Register"
+              title={mutationRegister.isPending ? 'Loading...' : 'Register'}
               className="absolute right-1/2 transform translate-x-1/2 bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow"
             />
           </div>

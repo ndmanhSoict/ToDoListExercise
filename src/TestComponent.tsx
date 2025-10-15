@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import fakecallAPILogin from './features/auth/api/authAPI';
+import { fakeCallAPILogin } from './features/auth/api/authAPI';
 
 export function TestComponent() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async () => {
-      const res = await fakecallAPILogin('t18@gmail.com');
+      const res = await fakeCallAPILogin('t18@gmail.com');
       return res;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 

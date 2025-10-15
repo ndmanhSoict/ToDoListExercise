@@ -12,6 +12,7 @@ export default function InputAuth<T extends FieldValues>({
   placeholder,
   required,
   namevalidate,
+  propOnChange,
 }: {
   form: UseFormReturn<T>;
   type: string;
@@ -22,9 +23,11 @@ export default function InputAuth<T extends FieldValues>({
   className?: string;
   placeholder?: string;
   namevalidate?: Path<T>;
+  propOnChange?: (email: string) => void;
 }) {
   const {
     register,
+    trigger,
     formState: { errors },
   } = form;
 
@@ -50,6 +53,18 @@ export default function InputAuth<T extends FieldValues>({
           type={type}
           placeholder={placeholder || ''}
           required={required}
+          onBlur={async (e) => {
+            if (propOnChange && namevalidate) {
+              const isValid = await trigger(namevalidate);
+              if (isValid) {
+                const value = e.target.value;
+                console.log(value);
+                if (value) {
+                  propOnChange(value as string);
+                }
+              }
+            }
+          }}
         />
         {iconright && (
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2 leading-none">
