@@ -1,13 +1,13 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import ButtonBasic from './ButtonBasic';
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../../store/strore';
+import type { AppDispatch, RootState } from '../../store/store';
 import { deleteUser } from '../../store/userSlice';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
   const userName = useSelector((state: RootState) => state.user.userName);
-  console.log(userName);
+  // console.log(userName);
   const dispatch = useDispatch<AppDispatch>();
 
   return (

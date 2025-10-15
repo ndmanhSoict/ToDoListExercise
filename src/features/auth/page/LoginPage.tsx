@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputAuth from '../../../shared/components/InputAuth';
 import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
@@ -6,10 +6,12 @@ import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../../store/strore';
+import type { AppDispatch } from '../../../store/store';
 import { setUser } from '../../../store/userSlice';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { fakeCallAPILogin } from '../api/authAPI';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -37,6 +39,15 @@ export default function LoginPage() {
     // console.log('Dữ liệu hợp lệ:', data);
     mutation.mutate(data.email);
   };
+
+  useEffect(() => {
+    const msg = sessionStorage.getItem('toastMessage');
+    // if (msg) {
+    toast.error(msg);
+    sessionStorage.removeItem('toastMessage');
+    console.log('chay useeffect rồi');
+    // }
+  }, []);
 
   return (
     <>
@@ -100,6 +111,7 @@ export default function LoginPage() {
             Register here
           </Link>
         </div>
+        <ToastContainer position="bottom-right" autoClose={2000} />
       </div>
     </>
   );

@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { Provider } from 'react-redux';
-import { persistor, store } from './store/strore';
+import { persistor, store } from './store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Import route tree được generate tự động
@@ -34,6 +34,7 @@ if (!rootElement.innerHTML) {
           </PersistGate>
         </Provider>
       </QueryClientProvider>
+      ,
     </StrictMode>,
   );
 }

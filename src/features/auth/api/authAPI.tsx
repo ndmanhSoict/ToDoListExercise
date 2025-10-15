@@ -8,7 +8,7 @@ function fakeFunctionLogin(email: string): Promise<string> {
 
 async function fakeCallAPILogin(email: string) {
   const result = await fakeFunctionLogin(email);
-  console.log(result);
+  // console.log(result);
   return result as string;
 }
 
