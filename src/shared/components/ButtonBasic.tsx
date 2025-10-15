@@ -5,18 +5,21 @@ export default function ButtonBasic({
   className,
   onClick,
   type = 'button',
+  disabled,
 }: {
   title: string;
   className?: string;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }) {
   return (
     <button
       type={type}
+      disabled={disabled}
       onClick={onClick}
       className={twMerge(
-        `block mx-auto w-fit text-white rounded-full transition-colors hover:cursor-pointer`,
+        `block mx-auto w-fit text-white rounded-full transition-colors hover:cursor-pointer ${disabled ? 'hover:cursor-not-allowed' : ''}`,
         className,
       )}
     >

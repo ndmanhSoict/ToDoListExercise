@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputAuth from '../../../shared/components/InputAuth';
 import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ import { fakeCallAPICheckEmail, fakeCallAPIRegister } from '../api/authAPI';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const memoEmailState: boolean = false;
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const form = useForm<RegisterSchema>({
@@ -29,22 +30,35 @@ export default function RegisterPage() {
 
   const mutationCheckEmail = useMutation({
     mutationFn: async (email: string) => {
-      console.log('da chay vao day');
+      // console.log('da chay vao day');
       const res = await fakeCallAPICheckEmail(email);
       return res;
     },
     onSuccess: (data) => {
-      console.log('thực thi buosc cuối');
+      console.log('thực thi bước cuối');
       if (data === 'Email already exists') {
         form.setError('email', { type: 'manual', message: 'Email đã tồn tại!' });
+        // console.log(form.getFieldState('email'))
       } else {
         form.clearErrors('email');
+        // console.log(form.getFieldState('email'))
       }
     },
   });
 
-  const onSubmit = (data: RegisterSchema) => {
-    mutationRegister.mutate(data.email);
+  const emailState = form.getFieldState('email');
+  useEffect(() => {
+    console.log('Field state cập nhật:', emailState);
+    console.log('Lỗi email:', emailState.error);
+  }, [emailState]);
+
+  // const onSubmit = (data: RegisterSchema) => {
+  // if (form.getFieldState("email").error) {
+  //   mutationRegister.mutate(data.email);
+  // }
+  const onSubmit = () => {
+    console.log('memo da luu là:', memoEmailState);
+    console.log(form.getFieldState('email'));
   };
   return (
     <>
@@ -100,6 +114,7 @@ export default function RegisterPage() {
 
           <div className="mb-4 relative w-full">
             <ButtonBasic
+              disabled={mutationCheckEmail.isPending}
               type="submit"
               title={mutationRegister.isPending ? 'Loading...' : 'Register'}
               className="absolute right-1/2 transform translate-x-1/2 bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow"
