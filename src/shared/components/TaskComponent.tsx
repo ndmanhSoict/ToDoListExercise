@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { Task } from '../type/TypeTask';
 import type { TaskStatus } from '../type/TypeTask';
 import ModalTaskDetail from './ModalTaskDetail';
+import { TaskContext } from '../context/TaskContext';
+
 export default function TaskComponent({
   task,
   fromColumn,
@@ -14,7 +16,7 @@ export default function TaskComponent({
     setOpenModalDetail(!openModalDetail);
   }
   return (
-    <>
+    <TaskContext.Provider value={{ handleOpenCloseModal }}>
       <div
         className="border p-4 mb-4 rounded bg-white shadow w-56 block mx-auto"
         draggable={true}
@@ -31,6 +33,6 @@ export default function TaskComponent({
       {openModalDetail && (
         <ModalTaskDetail task={task} propOpenClose={handleOpenCloseModal}></ModalTaskDetail>
       )}
-    </>
+    </TaskContext.Provider>
   );
 }
