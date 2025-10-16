@@ -28,8 +28,10 @@ export default function ColumnTask({
       }}
       className="flex flex-col flex-shrink-0 w-64 bg-white shadow m-4 rounded p-1 h-fit"
     >
-      <h2 className="font-bold text-lg mb-2">{header}</h2>
-      <p className="text-sm text-gray-500 mb-4">{count} tasks</p>
+      <div className="flex justify-between items-center px-2 mb-4">
+        <h2 className="font-bold text-lg">{header}</h2>
+        <p className="text-sm text-gray-500">{count} tasks</p>
+      </div>
       {proptaskList.map((task) => (
         <TaskComponent key={String(task.id)} task={task} fromColumn={header} />
       ))}

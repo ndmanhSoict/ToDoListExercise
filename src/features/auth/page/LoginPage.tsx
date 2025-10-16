@@ -4,7 +4,7 @@ import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../../store/store';
 import { setUser } from '../../../store/userSlice';
@@ -14,6 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [hidePassword, setHidePassword] = useState(true);
@@ -36,18 +37,17 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginSchema) => {
-    // console.log('Dữ liệu hợp lệ:', data);
     mutation.mutate(data.email);
   };
 
   useEffect(() => {
     const msg = sessionStorage.getItem('toastMessage');
-    // if (msg) {
-    toast.error(msg);
-    sessionStorage.removeItem('toastMessage');
-    console.log('chay useeffect rồi');
-    // }
-  }, []);
+    if (msg) {
+      toast.error(msg, {
+        onClose: () => sessionStorage.removeItem('toastMessage'),
+      });
+    }
+  }, [location.pathname]);
 
   return (
     <>

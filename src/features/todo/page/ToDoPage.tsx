@@ -59,7 +59,7 @@ export default function ToDoPage() {
 
   // console.log(allTasks);
   return (
-    <div className="w-full h-screen flex overflow-x-auto p-4">
+    <div className="w-full h-[calc(100vh-4.5rem)] flex overflow-x-auto p-4">
       {Object.keys(allTasks).map((key) => {
         const statusKey = key as keyof TaskState;
         return (

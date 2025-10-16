@@ -34,7 +34,6 @@ if (!rootElement.innerHTML) {
           </PersistGate>
         </Provider>
       </QueryClientProvider>
-      ,
     </StrictMode>,
   );
 }

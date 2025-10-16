@@ -4,7 +4,7 @@ import HeaderComponent from '../shared/components/HeaderComponent';
 
 const RootLayout = () => (
   <>
-    <div className="bg-[url(./assets/images/bg.jpg)] bg-cover bg-fixed min-h-screen absolute top-0 left-0 right-0 -z-10">
+    <div className="bg-[url(./assets/images/bg.png)] bg-cover bg-fixed min-h-screen absolute top-0 left-0 right-0 -z-10">
       <HeaderComponent></HeaderComponent>
       <Outlet />
       <TanStackRouterDevtools />
