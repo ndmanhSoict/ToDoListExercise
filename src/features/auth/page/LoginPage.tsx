@@ -10,7 +10,6 @@ import type { AppDispatch } from '../../../store/store';
 import { setUser } from '../../../store/userSlice';
 import { useMutation } from '@tanstack/react-query';
 import { fakeCallAPILogin } from '../api/authAPI';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
@@ -99,7 +98,6 @@ export default function LoginPage() {
             Register here
           </Link>
         </div>
-        <ToastContainer position="bottom-right" autoClose={2000} />
       </div>
     </>
   );

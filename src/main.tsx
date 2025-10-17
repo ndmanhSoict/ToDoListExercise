@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { Provider } from 'react-redux';
 import { persistor, store } from './store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
 
 // Import route tree được generate tự động
 import { routeTree } from './routeTree.gen';
@@ -31,6 +32,7 @@ if (!rootElement.innerHTML) {
         <Provider store={store}>
           <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}>
             <RouterProvider router={router} />
+            <ToastContainer position="bottom-right" autoClose={2000} />
           </PersistGate>
         </Provider>
       </QueryClientProvider>
