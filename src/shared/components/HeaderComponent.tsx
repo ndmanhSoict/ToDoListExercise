@@ -1,10 +1,10 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import ButtonBasic from './ButtonBasic';
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../../store/store';
-import { deleteUser } from '../../store/userSlice';
-import LogoIcon from '../../assets/images/logo-icon.png';
-import LogoText from '../../assets/images/logo-text.png';
+import type { AppDispatch, RootState } from '@store/store';
+import { deleteUser } from '@store/userSlice';
+import LogoIcon from '@assets/images/logo-icon.png';
+import LogoText from '@assets/images/logo-text.png';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();

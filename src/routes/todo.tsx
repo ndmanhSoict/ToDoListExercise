@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import ToDoPage from '../features/todo/page/ToDoPage';
-import { store } from '../store/store';
+import { store } from '@store/store';
 import { toast } from 'react-toastify';
 
 export const Route = createFileRoute('/todo')({

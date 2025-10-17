@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import InputAuth from '../../../shared/components/InputAuth';
-import ButtonBasic from '../../../shared/components/ButtonBasic';
+import InputAuth from '@shared/components/InputAuth';
+import ButtonBasic from '@shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
-import { registerSchema, type RegisterSchema } from '../schemas/authSchema';
+import { registerSchema, type RegisterSchema } from '@schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useMutation } from '@tanstack/react-query';
-import { fakeCallAPICheckEmail, fakeCallAPIRegister } from '../api/authAPI';
+import { fakeCallAPICheckEmail, fakeCallAPIRegister } from '@api/authAPI';
 
 export default function RegisterPage() {
   const navigate = useNavigate();

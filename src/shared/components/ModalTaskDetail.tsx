@@ -1,4 +1,4 @@
-import type { Task } from '../type/TypeTask';
+import type { Task } from '@type/TypeTask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { useContext, useState } from 'react';

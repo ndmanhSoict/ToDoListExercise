@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import HeaderComponent from '../shared/components/HeaderComponent';
+import HeaderComponent from '@shared/components/HeaderComponent';
 
 const RootLayout = () => (
   <>

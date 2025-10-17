@@ -1,4 +1,4 @@
-import { type Task } from './shared/type/TypeTask';
+import { type Task } from '@shared/type/TypeTask';
 
 export const fakeTaskList: Task[] = [
   {

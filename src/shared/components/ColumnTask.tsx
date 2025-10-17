@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import type { Task } from '../type/TypeTask';
+import type { Task } from '@type/TypeTask';
 import TaskComponent from './TaskComponent';
-import type { TaskStatus } from '../type/TypeTask';
+import type { TaskStatus } from '@type/TypeTask';
 
 export default function ColumnTask({
   header,

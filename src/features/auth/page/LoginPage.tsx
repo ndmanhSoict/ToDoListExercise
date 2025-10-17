@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import InputAuth from '../../../shared/components/InputAuth';
-import ButtonBasic from '../../../shared/components/ButtonBasic';
+import InputAuth from '@shared/components/InputAuth';
+import ButtonBasic from '@shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../../store/store';
-import { setUser } from '../../../store/userSlice';
+import type { AppDispatch } from '@store/store';
+import { setUser } from '@store/userSlice';
 import { useMutation } from '@tanstack/react-query';
-import { fakeCallAPILogin } from '../api/authAPI';
+import { fakeCallAPILogin } from '@api/authAPI';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {

@@ -1,8 +1,8 @@
-import ColumnTask from '../../../shared/components/ColumnTask';
+import ColumnTask from '@shared/components/ColumnTask';
 import { useEffect, useState } from 'react';
-import { fakeTaskList } from '../../../fakeTastList';
-import type { Task } from '../../../shared/type/TypeTask';
-import type { TaskStatus } from '../../../shared/type/TypeTask';
+import { fakeTaskList } from '@fakeTastList';
+import type { Task } from '@shared/type/TypeTask';
+import type { TaskStatus } from '@shared/type/TypeTask';
 
 type TaskState = {
   CREATED: Task[];
