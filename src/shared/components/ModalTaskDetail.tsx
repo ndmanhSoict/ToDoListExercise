@@ -2,7 +2,7 @@ import type { Task } from '@type/TypeTask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { useContext, useState } from 'react';
-import { TaskContext } from '../context/TaskContext';
+import { TaskContext } from '@shared/context/TaskContext';
 import ButtonBasic from './ButtonBasic';
 
 export default function ModalTaskDetail(

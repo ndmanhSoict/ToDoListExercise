@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { Task } from '../type/TypeTask';
-import type { TaskStatus } from '../type/TypeTask';
+import type { Task } from '@type/TypeTask';
+import type { TaskStatus } from '@type/TypeTask';
 import ModalTaskDetail from './ModalTaskDetail';
-import { TaskContext } from '../context/TaskContext';
+import { TaskContext } from '@shared/context/TaskContext';
 
 export default function TaskComponent({
   task,
