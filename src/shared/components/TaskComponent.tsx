@@ -30,9 +30,7 @@ export default function TaskComponent({
         {/* <p className="text-sm text-gray-500">Created at: {task.createdAt.toDateString()}</p>
       <p className="text-sm text-gray-500">Updated at: {task.updatedAt.toDateString()}</p> */}
       </div>
-      {openModalDetail && (
-        <ModalTaskDetail task={task} propOpenClose={handleOpenCloseModal}></ModalTaskDetail>
-      )}
+      {openModalDetail && <ModalTaskDetail task={task}></ModalTaskDetail>}
     </TaskContext.Provider>
   );
 }

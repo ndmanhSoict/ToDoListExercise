@@ -6,7 +6,7 @@ import { TaskContext } from '../context/TaskContext';
 import ButtonBasic from './ButtonBasic';
 
 export default function ModalTaskDetail(
-  { task, propOpenClose }: { task: Task; propOpenClose: () => void },
+  { task }: { task: Task },
   // edit: boolean,
 ) {
   const [edit, setEdit] = useState(true);
@@ -17,13 +17,20 @@ export default function ModalTaskDetail(
   function checkEditting(): boolean {
     return !(task.title === title && task.description === description);
   }
+  function closeModalTaskDetail() {
+    if (checkEditting()) {
+      setOpenModalConfirm(true);
+    } else {
+      getContext?.handleOpenCloseModal();
+    }
+  }
   function handleOpenModalConfirm() {
     setOpenModalConfirm(!openModalConfirm);
   }
   return (
     <div
       className="w-full h-screen absolute top-0 left-0 bg-gray-200/45"
-      onClick={() => propOpenClose()}
+      onClick={() => closeModalTaskDetail()}
     >
       <div
         className="absolute w-200 h-100 px-6 py-4 top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-white rounded-xl"
@@ -34,13 +41,7 @@ export default function ModalTaskDetail(
           <FontAwesomeIcon
             icon={faTimes}
             className="text-2xl"
-            onClick={() => {
-              if (checkEditting()) {
-                setOpenModalConfirm(true);
-              } else {
-                getContext?.handleOpenCloseModal();
-              }
-            }}
+            onClick={() => closeModalTaskDetail()}
           />
         </div>
         <hr className="mb-4"></hr>
