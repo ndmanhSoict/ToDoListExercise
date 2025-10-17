@@ -5,8 +5,10 @@ import type { AppDispatch, RootState } from '../../store/store';
 import { deleteUser } from '../../store/userSlice';
 import LogoIcon from '../../assets/images/logo-icon.png';
 import LogoText from '../../assets/images/logo-text.png';
+
 export default function HeaderComponent() {
   const navigate = useNavigate();
+
   const userName = useSelector((state: RootState) => state.user.userName);
   // console.log(userName);
   const dispatch = useDispatch<AppDispatch>();
@@ -59,14 +61,14 @@ export default function HeaderComponent() {
             onClick={() => {
               navigate({ to: '/login' });
             }}
-          ></ButtonBasic>
+          />
           <ButtonBasic
             title="Register"
             className="bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow h-fit"
             onClick={() => {
               navigate({ to: '/register' });
             }}
-          ></ButtonBasic>
+          />
         </div>
       )}
     </div>

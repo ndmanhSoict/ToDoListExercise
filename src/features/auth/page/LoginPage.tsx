@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import InputAuth from '../../../shared/components/InputAuth';
 import ButtonBasic from '../../../shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../../store/store';
 import { setUser } from '../../../store/userSlice';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { fakeCallAPILogin } from '../api/authAPI';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginPage() {
-  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [hidePassword, setHidePassword] = useState(true);
@@ -22,16 +21,14 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (email: string) => {
       const res = await fakeCallAPILogin(email);
-      return res as string;
+      return res;
     },
     onSuccess: (data) => {
       const getUserName = data.slice(0, data.indexOf('@'));
       dispatch(setUser(getUserName));
-      queryClient.invalidateQueries({ queryKey: ['user'] });
       navigate({ to: '/todo' });
     },
   });
@@ -39,15 +36,6 @@ export default function LoginPage() {
   const onSubmit = (data: LoginSchema) => {
     mutation.mutate(data.email);
   };
-
-  useEffect(() => {
-    const msg = sessionStorage.getItem('toastMessage');
-    if (msg) {
-      toast.error(msg, {
-        onClose: () => sessionStorage.removeItem('toastMessage'),
-      });
-    }
-  }, [location.pathname]);
 
   return (
     <>
@@ -65,7 +53,7 @@ export default function LoginPage() {
             form={form}
             type="email"
             label="email"
-            namevalidate="email"
+            nameValidate="email"
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
             required={true}
@@ -85,7 +73,7 @@ export default function LoginPage() {
               </i>
             }
             placeholder="Input your password"
-            required={true}
+            required
           />
           {/* <br className="my-4" /> */}
           <a

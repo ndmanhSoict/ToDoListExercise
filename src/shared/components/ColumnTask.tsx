@@ -15,6 +15,7 @@ export default function ColumnTask({
   onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
   const [taskList, setTaskList] = useState<Task[]>([]);
+  const list = [...proptaskList, ...taskList];
 
   return (
     <div
@@ -32,8 +33,8 @@ export default function ColumnTask({
         <h2 className="font-bold text-lg">{header}</h2>
         <p className="text-sm text-gray-500">{count} tasks</p>
       </div>
-      {proptaskList.map((task) => (
-        <TaskComponent key={String(task.id)} task={task} fromColumn={header} />
+      {list.map((task) => (
+        <TaskComponent key={task.id} task={task} fromColumn={header} />
       ))}
       <button
         className="mt-auto bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"

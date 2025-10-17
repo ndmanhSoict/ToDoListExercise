@@ -11,7 +11,7 @@ export default function InputAuth<T extends FieldValues>({
   className,
   placeholder,
   required,
-  namevalidate,
+  nameValidate,
   propOnChange,
 }: {
   form: UseFormReturn<T>;
@@ -22,7 +22,7 @@ export default function InputAuth<T extends FieldValues>({
   iconright?: ReactNode;
   className?: string;
   placeholder?: string;
-  namevalidate?: Path<T>;
+  nameValidate?: Path<T>;
   propOnChange?: (email: string) => void;
 }) {
   const {
@@ -32,8 +32,8 @@ export default function InputAuth<T extends FieldValues>({
   } = form;
 
   const error =
-    namevalidate && typeof namevalidate === 'string'
-      ? (errors[namevalidate]?.message as string | undefined)
+    nameValidate && typeof nameValidate === 'string'
+      ? (errors[nameValidate]?.message as string | undefined)
       : undefined;
 
   return (
@@ -49,13 +49,13 @@ export default function InputAuth<T extends FieldValues>({
         )}
         <input
           className="border border-gray-300 p-3 rounded-full w-full px-[2.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500 align-middle !leading-none outline outline-transparent hover:outline-blue-400"
-          {...(namevalidate ? register(namevalidate) : {})}
+          {...(nameValidate ? register(nameValidate) : {})}
           type={type}
           placeholder={placeholder || ''}
           required={required}
           onBlur={async (e) => {
-            if (propOnChange && namevalidate) {
-              const isValid = await trigger(namevalidate);
+            if (propOnChange && nameValidate) {
+              const isValid = await trigger(nameValidate);
               if (isValid) {
                 const value = e.target.value;
                 console.log(value);

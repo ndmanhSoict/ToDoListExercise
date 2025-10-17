@@ -69,7 +69,7 @@ export default function RegisterPage() {
             form={form}
             type="email"
             label="email"
-            namevalidate="email"
+            nameValidate="email"
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
             required={true}
@@ -80,7 +80,7 @@ export default function RegisterPage() {
             form={form}
             type={hidePassword ? 'password' : 'text'}
             label="password"
-            namevalidate="password"
+            nameValidate="password"
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i
@@ -98,7 +98,7 @@ export default function RegisterPage() {
             form={form}
             type={hideConfirmPassword ? 'password' : 'text'}
             label="Confirm password"
-            namevalidate="confirmPassword"
+            nameValidate="confirmPassword"
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i

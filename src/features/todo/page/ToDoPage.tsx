@@ -46,7 +46,7 @@ export default function ToDoPage() {
   }, []);
 
   function callDropEvent(taskid: string, fromColumn: TaskStatus, toColumn: TaskStatus): void {
-    if (fromColumn == toColumn) return;
+    if (fromColumn === toColumn) return;
     const task = allTasks[fromColumn].find((t) => t.id === taskid);
     if (task) {
       setAllTasks((prev) => ({
