@@ -5,7 +5,7 @@ interface ButtonBasicProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
   title: string;
 }
 
-export const ButtonBasic: React.FC<ButtonBasicProps> = ({
+const ButtonBasic: React.FC<ButtonBasicProps> = ({
   title,
   className,
   ...props
@@ -16,7 +16,7 @@ export const ButtonBasic: React.FC<ButtonBasicProps> = ({
   return (
     <button
       className={twMerge(
-        `block mx-auto w-fit text-white rounded-full transition-colors hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 px-6 py-2 bg-blue-600 hover:bg-blue-700`,
+        `block mx-auto w-fit text-white rounded-full transition-colors hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-80`,
         className,
       )}
       {...props}
@@ -25,3 +25,5 @@ export const ButtonBasic: React.FC<ButtonBasicProps> = ({
     </button>
   );
 };
+
+export default ButtonBasic;

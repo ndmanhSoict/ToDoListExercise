@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import InputAuth from '@shared/components/InputAuth';
-import { ButtonBasic } from '@shared/components/ButtonBasic';
+import ButtonBasic from '@shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { registerSchema, type RegisterSchema } from '@schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -116,7 +116,11 @@ export default function RegisterPage() {
             <ButtonBasic
               disabled={mutationCheckEmail.isPending}
               type="submit"
-              title={mutationRegister.isPending ? 'Loading...' : 'Register'}
+              title={
+                mutationRegister.isPending || mutationCheckEmail.isPending
+                  ? 'Loading...'
+                  : 'Register'
+              }
               className="absolute right-1/2 transform translate-x-1/2 bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow"
             />
           </div>

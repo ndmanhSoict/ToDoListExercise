@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import InputAuth from '@shared/components/InputAuth';
-import { ButtonBasic } from '@shared/components/ButtonBasic';
+import ButtonBasic from '@shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -83,6 +83,7 @@ export default function LoginPage() {
           </a>
           <div className="mb-4 relative w-full">
             <ButtonBasic
+              disabled={mutation.isPending}
               type="submit"
               title={mutation.isPending ? 'Loading...' : 'Login'}
               className="absolute right-1/2 transform translate-x-1/2 bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow"
