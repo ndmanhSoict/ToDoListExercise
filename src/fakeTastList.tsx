@@ -147,3 +147,33 @@ export const fakeTaskList: Task[] = [
     updatedAt: new Date('2025-10-08T17:45:00'),
   },
 ];
+
+// {
+//   "name": "Complete project documentation",
+//   "description": "Write comprehensive API documentation",
+//   "startDate": "2024-01-01T09:00:00Z",
+//   "endDate": "2024-01-05T17:00:00Z",
+//   "assignee": "johndoe",
+//   "priority": "HIGH",
+//   "status": "TODO"
+// }
+
+// {
+//   "success": true,
+//   "message": "Todo created successfully",
+//   "data": {
+//     "todo": {
+//       "id": "string",
+//       "name": "string",
+//       "description": "string",
+//       "startDate": "2025-10-22T07:31:00.349Z",
+//       "endDate": "2025-10-22T07:31:00.349Z",
+//       "assignee": "string",
+//       "priority": "LOW",
+//       "status": "TODO",
+//       "createdById": "string",
+//       "createdAt": "2025-10-22T07:31:00.349Z",
+//       "updatedAt": "2025-10-22T07:31:00.349Z"
+//     }
+//   }
+// }

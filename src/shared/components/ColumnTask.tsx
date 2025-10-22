@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Task } from '@type/TypeTask';
 import TaskComponent from './TaskComponent';
 import type { TaskStatus } from '@type/TypeTask';
+import ModalAddTask from './ModalAddNewTask';
 
 export default function ColumnTask({
   header,
@@ -14,8 +15,12 @@ export default function ColumnTask({
   proptaskList: Task[];
   onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
-  const [taskList, setTaskList] = useState<Task[]>([]);
+  const [taskList] = useState<Task[]>([]);
   const list = [...proptaskList, ...taskList];
+  const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
+  function CloseModal() {
+    setOpenModalAddNewTask(false);
+  }
 
   return (
     <div
@@ -37,23 +42,12 @@ export default function ColumnTask({
         <TaskComponent key={task.id} task={task} fromColumn={header} />
       ))}
       <button
-        className="mt-auto bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        onClick={() =>
-          setTaskList([
-            ...taskList,
-            {
-              id: String(taskList.length + 1),
-              title: `Test Task ${taskList.length + 1}`,
-              description: 'This is a test task',
-              status: 'IN_PROGRESS',
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            },
-          ])
-        }
+        className=" text-black/65 py-2 px-4 rounded hover:bg-gray-400/25 w-1/2 self-end"
+        onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
       >
         + Add Task
       </button>
+      {openModalAddNewTask && <ModalAddTask status={header} propCloseModal={CloseModal} />}
     </div>
   );
 }
