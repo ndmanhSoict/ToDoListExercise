@@ -1,29 +1,27 @@
+import type React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export default function ButtonBasic({
+interface ButtonBasicProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  title: string;
+}
+
+export const ButtonBasic: React.FC<ButtonBasicProps> = ({
   title,
   className,
-  onClick,
-  type = 'button',
-  disabled,
+  ...props
 }: {
   title: string;
   className?: string;
-  onClick?: () => void;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-}) {
+}) => {
   return (
     <button
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
       className={twMerge(
-        `block mx-auto w-fit text-white rounded-full transition-colors hover:cursor-pointer ${disabled ? 'hover:cursor-not-allowed' : ''}`,
+        `block mx-auto w-fit text-white rounded-full transition-colors hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 px-6 py-2 bg-blue-600 hover:bg-blue-700`,
         className,
       )}
+      {...props}
     >
       {title}
     </button>
   );
-}
+};

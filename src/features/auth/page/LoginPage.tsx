@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import InputAuth from '@shared/components/InputAuth';
-import ButtonBasic from '@shared/components/ButtonBasic';
+import { ButtonBasic } from '@shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
