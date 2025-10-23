@@ -9,8 +9,9 @@ import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '@store/store';
 import { setUser } from '@store/userSlice';
 import { useMutation } from '@tanstack/react-query';
-import { fakeCallAPILogin } from '@api/authAPI';
+import { loginApi } from '@api/authAPI';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -21,19 +22,29 @@ export default function LoginPage() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (email: string) => {
-      const res = await fakeCallAPILogin(email);
+    mutationFn: async (body: { username: string; password: string }) => {
+      const res = await loginApi(body);
       return res;
     },
     onSuccess: (data) => {
-      const getUserName = data.slice(0, data.indexOf('@'));
+      console.log('Login successful:', data);
+      const username = data.data.user.username;
+      const getUserName = username.slice(0, username.indexOf('@'));
       dispatch(setUser(getUserName));
+      toast.success('Login successful!');
       navigate({ to: '/todo' });
     },
   });
 
-  const onSubmit = (data: LoginSchema) => {
-    mutation.mutate(data.email);
+  const onSubmit = async (data: LoginSchema) => {
+    // console.log("Submitting login form with data:", data);
+    // try {
+    //   const result = await loginApi({ username: data.email, password: data.password });
+    //   console.log("Login result:", result);
+    // } catch (err) {
+    //   console.error("Login failed:", err);
+    // }
+    mutation.mutate({ username: data.email, password: data.password });
   };
 
   return (
@@ -62,6 +73,7 @@ export default function LoginPage() {
             form={form}
             type={hidePassword ? 'password' : 'text'}
             label="password"
+            nameValidate="password"
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i

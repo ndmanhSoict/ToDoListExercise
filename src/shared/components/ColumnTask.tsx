@@ -41,12 +41,14 @@ export default function ColumnTask({
       {list.map((task) => (
         <TaskComponent key={task.id} task={task} fromColumn={header} />
       ))}
-      <button
-        className=" text-black/65 py-2 px-4 rounded hover:bg-gray-400/25 w-1/2 self-end"
-        onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
-      >
-        + Add Task
-      </button>
+      {header == 'CREATED' ? (
+        <button
+          className=" text-black/65 py-2 px-4 rounded hover:bg-gray-400/25 w-1/2 self-end"
+          onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
+        >
+          + Add Task
+        </button>
+      ) : null}
       {openModalAddNewTask && <ModalAddTask status={header} propCloseModal={CloseModal} />}
     </div>
   );

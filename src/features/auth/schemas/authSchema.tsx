@@ -21,6 +21,7 @@ export type RegisterSchema = z.infer<typeof registerSchema>;
 
 export const loginSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
+  password: z.string().nonempty('Mật khẩu là bắt buộc'),
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;

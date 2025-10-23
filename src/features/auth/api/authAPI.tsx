@@ -1,15 +1,32 @@
-function fakeFunctionLogin(email: string): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(email);
-    }, 3000);
-  });
+interface LoginSuccessResponse {
+  success: true;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      id: string;
+      username: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+  };
 }
 
-async function fakeCallAPILogin(email: string) {
-  const result = await fakeFunctionLogin(email);
-  // console.log(result);
-  return result as string;
+async function loginApi(dataRequest: {
+  username: string;
+  password: string;
+}): Promise<LoginSuccessResponse> {
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username: dataRequest.username, password: dataRequest.password }),
+  });
+  const data = await response.json();
+  console.log(data);
+  return data;
 }
 
 function fakeFunctionRegister(email: string): Promise<string> {
@@ -44,4 +61,4 @@ async function fakeCallAPICheckEmail(email: string) {
   return result;
 }
 
-export { fakeCallAPILogin, fakeCallAPIRegister, fakeCallAPICheckEmail };
+export { loginApi, fakeCallAPIRegister, fakeCallAPICheckEmail };
