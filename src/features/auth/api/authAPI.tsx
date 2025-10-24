@@ -1,64 +1,24 @@
-interface LoginSuccessResponse {
-  success: true;
-  message: string;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    user: {
-      id: string;
-      username: string;
-      createdAt: string;
-      updatedAt: string;
-    };
-  };
+import api from '@shared/api/api';
+
+async function loginApi(userData: { username: string; password: string }) {
+  const response = await api.post('/auth/login', {
+    username: userData.username,
+    password: userData.password,
+  });
+  return response;
 }
 
-async function loginApi(dataRequest: {
+async function registerApi(registerData: {
   username: string;
   password: string;
-}): Promise<LoginSuccessResponse> {
-  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username: dataRequest.username, password: dataRequest.password }),
+  confirmPassword: string;
+}) {
+  const response = await api.post('/auth/register', {
+    username: registerData.username,
+    password: registerData.password,
+    confirmPassword: registerData.confirmPassword,
   });
-  const data = await response.json();
-  console.log(data);
-  return data;
+  return response;
 }
 
-function fakeFunctionRegister(email: string): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(email);
-    }, 3000);
-  });
-}
-
-async function fakeCallAPIRegister(email: string) {
-  const result = await fakeFunctionRegister(email);
-  console.log(result);
-  return result as string;
-}
-
-function fakeFunctionCheckEmail(email: string): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (email == 'giacmot18@gmail.com' || email == 'chatgptedu21@baret.pro') {
-        resolve('Email already exists');
-      } else {
-        resolve('Email is ok!');
-      }
-    }, 3000);
-  });
-}
-
-async function fakeCallAPICheckEmail(email: string) {
-  const result = await fakeFunctionCheckEmail(email);
-  console.log(result);
-  return result;
-}
-
-export { loginApi, fakeCallAPIRegister, fakeCallAPICheckEmail };
+export { loginApi, registerApi };

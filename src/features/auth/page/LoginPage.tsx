@@ -12,6 +12,8 @@ import { useMutation } from '@tanstack/react-query';
 import { loginApi } from '@api/authAPI';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
+import type { AxiosError } from 'axios';
+// import api from '@shared/api/api';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -26,24 +28,23 @@ export default function LoginPage() {
       const res = await loginApi(body);
       return res;
     },
-    onSuccess: (data) => {
-      console.log('Login successful:', data);
-      const username = data.data.user.username;
+    onSuccess: (response) => {
+      console.log('Login successful:', response.data.data);
+      const username = response.data.data.user.username;
       const getUserName = username.slice(0, username.indexOf('@'));
       dispatch(setUser(getUserName));
       toast.success('Login successful!');
       navigate({ to: '/todo' });
     },
+    onError: (error) => {
+      const err = error as AxiosError<{ error?: string }>;
+      const msg = err.response?.data?.error || 'Đăng nhập thất bại';
+      console.log('Login failed:', msg);
+    },
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    // console.log("Submitting login form with data:", data);
-    // try {
-    //   const result = await loginApi({ username: data.email, password: data.password });
-    //   console.log("Login result:", result);
-    // } catch (err) {
-    //   console.error("Login failed:", err);
-    // }
+    console.log('Submitting login form with data:', data);
     mutation.mutate({ username: data.email, password: data.password });
   };
 
@@ -54,9 +55,10 @@ export default function LoginPage() {
           <h1 className="block text-center text-2xl font-bold mb-4">Login to start</h1>
           {mutation.isError && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {mutation.error instanceof Error
-                ? mutation.error.message
-                : 'Login failed. Please try again.'}
+              {(() => {
+                const err = mutation.error as AxiosError<{ error?: string }>;
+                return err.response?.data?.error || 'Login failed. Please try again.';
+              })()}
             </div>
           )}
           <InputAuth
