@@ -5,19 +5,15 @@ import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '@store/store';
-import { setUser } from '@store/userSlice';
 import { useMutation } from '@tanstack/react-query';
 import { loginApi } from '@api/authAPI';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
-// import api from '@shared/api/api';
+import { queryClient } from '../../../main';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const [hidePassword, setHidePassword] = useState(true);
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -30,9 +26,11 @@ export default function LoginPage() {
     },
     onSuccess: (response) => {
       console.log('Login successful:', response.data.data);
+      localStorage.setItem('accessToken', response.data.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.data.refreshToken);
       const username = response.data.data.user.username;
       const getUserName = username.slice(0, username.indexOf('@'));
-      dispatch(setUser(getUserName));
+      queryClient.setQueryData(['userName'], getUserName);
       toast.success('Login successful!');
       navigate({ to: '/todo' });
     },

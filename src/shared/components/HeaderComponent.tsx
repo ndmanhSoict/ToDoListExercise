@@ -1,17 +1,20 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import ButtonBasic from './ButtonBasic';
-import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '@store/store';
-import { deleteUser } from '@store/userSlice';
 import LogoIcon from '@assets/images/logo-icon.png';
 import LogoText from '@assets/images/logo-text.png';
+import { useQuery } from '@tanstack/react-query';
+import { logoutApi } from '@api/authAPI';
+import { queryClient } from '../../main';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
+  const { data: userName } = useQuery({
+    queryKey: ['userName'],
+    queryFn: () => null,
+    enabled: false,
+  });
 
-  const userName = useSelector((state: RootState) => state.user.userName);
-  // console.log(userName);
-  const dispatch = useDispatch<AppDispatch>();
+  console.log('userName: ', userName);
 
   return (
     <div className="sticky top-0 flex justify-around items-center bg-white h-18">
@@ -41,11 +44,12 @@ export default function HeaderComponent() {
       {userName ? (
         <div>
           <span>
-            Hi, {userName} !{' '}
+            Hi, {userName} !
             <button
-              className="underline italic hover:cursor-pointer hover:text-blue-400"
+              className="underline italic hover:cursor-pointer hover:text-blue-400 pl-2"
               onClick={() => {
-                dispatch(deleteUser());
+                logoutApi();
+                queryClient.setQueryData(['userName'], null);
                 navigate({ to: '/' });
               }}
             >

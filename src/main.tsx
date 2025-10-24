@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // Import route tree được generate tự động
 import { routeTree } from './routeTree.gen';
@@ -22,7 +23,7 @@ declare module '@tanstack/react-router' {
 }
 
 //React Query
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const rootElement = document.getElementById('root')!;
 if (!rootElement.innerHTML) {
@@ -33,6 +34,7 @@ if (!rootElement.innerHTML) {
           <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}>
             <RouterProvider router={router} />
             <ToastContainer position="bottom-right" autoClose={2000} />
+            <ReactQueryDevtools initialIsOpen={false} />
           </PersistGate>
         </Provider>
       </QueryClientProvider>

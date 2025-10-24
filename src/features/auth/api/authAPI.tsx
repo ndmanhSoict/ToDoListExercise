@@ -21,4 +21,8 @@ async function registerApi(registerData: {
   return response;
 }
 
-export { loginApi, registerApi };
+async function logoutApi() {
+  const response = await api.post('/auth/logout');
+  return response;
+}
+export { loginApi, registerApi, logoutApi };

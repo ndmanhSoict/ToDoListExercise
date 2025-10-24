@@ -15,6 +15,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.request.use(
+  (config) => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      config.headers['Authorization'] = `Bearer ${refreshToken}`;
+    }
+    return config;
+  },
+  undefined,
+  {
+    runWhen: (config) => {
+      return !!config.url && config.url.includes('/auth/refresh-token');
+    },
+  },
+);
+
 api.interceptors.response.use(
   (response) => {
     {
