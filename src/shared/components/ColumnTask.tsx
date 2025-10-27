@@ -49,7 +49,7 @@ export default function ColumnTask({
           + Add Task
         </button>
       ) : null}
-      {openModalAddNewTask && <ModalAddTask status={header} propCloseModal={CloseModal} />}
+      {openModalAddNewTask && <ModalAddTask propCloseModal={CloseModal} />}
     </div>
   );
 }

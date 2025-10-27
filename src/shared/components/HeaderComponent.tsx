@@ -4,7 +4,7 @@ import LogoIcon from '@assets/images/logo-icon.png';
 import LogoText from '@assets/images/logo-text.png';
 import { useQuery } from '@tanstack/react-query';
 import { getProfileApi, logoutApi } from '@api/authAPI';
-import { queryClient } from '../../main';
+import { queryClient } from '@main';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();

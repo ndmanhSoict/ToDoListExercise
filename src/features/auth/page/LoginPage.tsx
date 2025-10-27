@@ -37,13 +37,14 @@ export default function LoginPage() {
     },
     onError: (error) => {
       const err = error as AxiosError<{ error?: string }>;
-      const msg = err.response?.data?.error || 'Đăng nhập thất bại';
-      console.log('Login failed:', msg);
+      if (err.request) {
+        toast.error('Network error: Could not reach server.');
+      }
     },
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    console.log('Submitting login form with data:', data);
+    // console.log('Submitting login form with data:', data);
     mutation.mutate({ username: data.email, password: data.password });
   };
 

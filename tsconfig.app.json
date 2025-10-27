@@ -15,6 +15,7 @@
       "@api/*": ["src/features/auth/api/*"],
       "@store/*": ["src/store/*"],
       "@fakeTastList": ["src/fakeTastList"],
+      "@main": ["src/main"],
       "@features/*": ["src/features/*"],
       "@type/*": ["src/shared/type/*"]
     },

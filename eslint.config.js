@@ -27,6 +27,10 @@ export default defineConfig([
     },
     rules: {
       'prettier/prettier': 'error', // bật rule: format sai => ESLint báo lỗi
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
     },
   },
 ]);

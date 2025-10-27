@@ -22,6 +22,7 @@ export default defineConfig({
       '@api': path.resolve(__dirname, 'src/features/auth/api'),
       '@store': path.resolve(__dirname, 'src/store'),
       '@fakeTastList': path.resolve(__dirname, 'src/fakeTastList'),
+      '@main': path.resolve(__dirname, 'src/main'),
       '@features': path.resolve(__dirname, 'src/features'),
       '@type': path.resolve(__dirname, 'src/shared/type'),
     },

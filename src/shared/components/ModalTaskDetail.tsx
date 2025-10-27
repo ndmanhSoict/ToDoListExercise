@@ -12,11 +12,11 @@ export default function ModalTaskDetail(
   const [edit, setEdit] = useState(false);
   const [openModalConfirm, setOpenModalConfirm] = useState(false);
   // const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
-  const [title, setTitle] = useState(task.title);
+  const [title, setTitle] = useState(task.name);
   const [description, setDescription] = useState(task.description);
   const getContext = useContext(TaskContext);
   function checkEditting(): boolean {
-    return !(task.title === title && task.description === description);
+    return !(task.name === title && task.description === description);
   }
   function closeModalTaskDetail() {
     if (checkEditting()) {
@@ -106,7 +106,7 @@ export default function ModalTaskDetail(
                   onClick={() => {
                     setEdit(false);
                     setDescription(task.description);
-                    setTitle(task.title);
+                    setTitle(task.name);
                   }}
                 ></ButtonBasic>
               </div>
@@ -115,8 +115,8 @@ export default function ModalTaskDetail(
 
           <div className="flex-1 flex flex-col gap-2 px-2 pt-1 items-start justify-end">
             <h5 className="pt-0 mt-0">Task created by: Nguyen Duc Manh</h5>
-            <p>Creat at: {task.createdAt.toDateString()}</p>
-            <p>Update at: {task.updatedAt.toDateString()}</p>
+            <p>Creat at: {new Date(task.createdAt).toDateString()}</p>
+            <p>Update at: {new Date(task.updatedAt).toDateString()}</p>
           </div>
         </div>
       </div>
