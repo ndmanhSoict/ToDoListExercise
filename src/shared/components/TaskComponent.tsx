@@ -26,7 +26,7 @@ export default function TaskComponent({
         }}
         onClick={() => handleOpenCloseModal()}
       >
-        <h2 className="text-xl font-bold">{task.title}</h2>
+        <h2 className="text-xl font-bold">{task.name}</h2>
         {/* <p className="text-sm text-gray-500">Created at: {task.createdAt.toDateString()}</p>
       <p className="text-sm text-gray-500">Updated at: {task.updatedAt.toDateString()}</p> */}
       </div>

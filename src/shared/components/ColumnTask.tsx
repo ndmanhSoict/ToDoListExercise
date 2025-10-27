@@ -8,12 +8,12 @@ export default function ColumnTask({
   header,
   count,
   proptaskList,
-  onDropEvent,
+  // onDropEvent,
 }: {
   header: TaskStatus;
   count: number;
   proptaskList: Task[];
-  onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
+  // onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
   const [taskList] = useState<Task[]>([]);
   const list = [...proptaskList, ...taskList];
@@ -30,7 +30,7 @@ export default function ColumnTask({
         const data = e.dataTransfer.getData('id');
         const fromColumn = e.dataTransfer.getData('fromColumn') as TaskStatus;
         console.log('Đã thả phần tử:', data, 'từ cột', fromColumn, 'vào cột', header);
-        onDropEvent(data, fromColumn, header);
+        // onDropEvent(data, fromColumn, header);
       }}
       className="flex flex-col flex-shrink-0 w-64 bg-white shadow m-4 rounded p-1 h-fit"
     >
@@ -41,7 +41,7 @@ export default function ColumnTask({
       {list.map((task) => (
         <TaskComponent key={task.id} task={task} fromColumn={header} />
       ))}
-      {header == 'CREATED' ? (
+      {header == 'TODO' ? (
         <button
           className=" text-black/65 py-2 px-4 rounded hover:bg-gray-400/25 w-1/2 self-end"
           onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}

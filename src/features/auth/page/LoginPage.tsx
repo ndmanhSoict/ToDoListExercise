@@ -31,6 +31,7 @@ export default function LoginPage() {
       const username = response.data.data.user.username;
       const getUserName = username.slice(0, username.indexOf('@'));
       queryClient.setQueryData(['userName'], getUserName);
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
       toast.success('Login successful!');
       navigate({ to: '/todo' });
     },

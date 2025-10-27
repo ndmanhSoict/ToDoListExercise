@@ -3,18 +3,23 @@ import ButtonBasic from './ButtonBasic';
 import LogoIcon from '@assets/images/logo-icon.png';
 import LogoText from '@assets/images/logo-text.png';
 import { useQuery } from '@tanstack/react-query';
-import { logoutApi } from '@api/authAPI';
+import { getProfileApi, logoutApi } from '@api/authAPI';
 import { queryClient } from '../../main';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
   const { data: userName } = useQuery({
     queryKey: ['userName'],
-    queryFn: () => null,
-    enabled: false,
+    queryFn: async () =>
+      await getProfileApi().then((res) =>
+        res.data.data.user.username.slice(0, res.data.data.user.username.indexOf('@')),
+      ),
+    enabled: !!localStorage.getItem('accessToken'),
+    staleTime: 60000, // 1 phút
   });
 
-  console.log('userName: ', userName);
+  // const userName = queryClient.getQueryData<string>(['userName']);
+  // console.log('userName header là: ', userName);
 
   return (
     <div className="sticky top-0 flex justify-around items-center bg-white h-18">
