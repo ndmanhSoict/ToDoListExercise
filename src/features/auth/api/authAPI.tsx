@@ -1,5 +1,5 @@
 import api from '@shared/api/api';
-import { queryClient } from '../../../main';
+import { queryClient } from '@main';
 
 async function loginApi(userData: { username: string; password: string }) {
   const response = await api.post('/auth/login', {
@@ -39,4 +39,12 @@ async function getProfileApi() {
   return response;
 }
 
-export { loginApi, registerApi, logoutApi, getProfileApi };
+async function refreshTokenApi() {
+  const refreshToken = localStorage.getItem('refreshToken');
+  const response = await api.post('/auth/refresh-token', {
+    refreshToken: refreshToken,
+  });
+  return response;
+}
+
+export { loginApi, registerApi, logoutApi, getProfileApi, refreshTokenApi };

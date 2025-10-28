@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type TodoSchema, todoSchema } from '@features/todo/schemas/todoSchema';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
+import type { AxiosError } from 'axios';
 
 function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
   const {
@@ -33,12 +34,15 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
       return await createNewTodoApi(apiBody);
     },
     onSuccess: () => {
-      console.log('New task created successfully');
+      // console.log('New task created successfully');
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       propCloseModal();
     },
     onError: (error) => {
-      toast.error('Error creating new task: ' + error.message + '. Please try again.');
+      const err = error as AxiosError<{ error?: string }>;
+      if (err.request) {
+        toast.error(err.response?.data?.error);
+      }
     },
   });
   const onSubmit = (data: TodoSchema) => {
@@ -91,11 +95,11 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 <option value="" disabled selected hidden>
                   -- Select Assignee --
                 </option>
-                <option value={'Nguyen Duc Manh'}>Nguyen Duc Manh</option>
-                <option value={'Le Anh Tuan'}>Le Anh Tuan</option>
-                <option value={'Pham Huy Hoang'}>Pham Huy Hoang</option>
-                <option value={'Nguyen Van Nam'}>Nguyen Van Nam</option>
                 <option value={'Tran Thi Tra Dang'}>Tran Thi Tra Dang</option>
+                <option value={'Pham Huy Hoang'}>Pham Huy Hoang</option>
+                <option value={'Nguyen Duc Manh'}>Nguyen Duc Manh</option>
+                <option value={'Nguyen Van Nam'}>Nguyen Van Nam</option>
+                <option value={'Le Anh Tuan'}>Le Anh Tuan</option>
               </select>
               <pre className="text-red-500 text-sm">
                 {errors.assignee ? errors.assignee.message : ' '}

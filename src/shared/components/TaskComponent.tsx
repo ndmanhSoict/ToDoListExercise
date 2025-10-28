@@ -1,16 +1,9 @@
 import { useState } from 'react';
 import type { Task } from '@type/TypeTask';
-import type { TaskStatus } from '@type/TypeTask';
 import ModalTaskDetail from './ModalTaskDetail';
 import { TaskContext } from '@shared/context/TaskContext';
 
-export default function TaskComponent({
-  task,
-  fromColumn,
-}: {
-  task: Task;
-  fromColumn: TaskStatus;
-}) {
+export default function TaskComponent({ task }: { task: Task }) {
   const [openModalDetail, setOpenModalDetail] = useState(false);
   function handleOpenCloseModal(): void {
     setOpenModalDetail(!openModalDetail);
@@ -21,8 +14,7 @@ export default function TaskComponent({
         className="border p-4 mb-4 rounded bg-white shadow w-56 block mx-auto"
         draggable={true}
         onDragStart={(e) => {
-          e.dataTransfer.setData('id', task.id);
-          e.dataTransfer.setData('fromColumn', fromColumn);
+          e.dataTransfer.setData('task', JSON.stringify(task));
         }}
         onClick={() => handleOpenCloseModal()}
       >

@@ -10,7 +10,7 @@ import { loginApi } from '@api/authAPI';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
-import { queryClient } from '../../../main';
+import { queryClient } from '@main';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -35,12 +35,12 @@ export default function LoginPage() {
       toast.success('Login successful!');
       navigate({ to: '/todo' });
     },
-    onError: (error) => {
-      const err = error as AxiosError<{ error?: string }>;
-      if (err.request) {
-        toast.error('Network error: Could not reach server.');
-      }
-    },
+    // onError: (error) => {
+    //   const err = error as AxiosError<{ error?: string }>;
+    //   if (err.request) {
+    //     toast.error(err.response?.data?.error);
+    //   }
+    // },
   });
 
   const onSubmit = async (data: LoginSchema) => {

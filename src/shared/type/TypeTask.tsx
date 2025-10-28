@@ -7,7 +7,7 @@ export type Task = {
   assignee: string;
   priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT' | 'HIGHEST';
   status: TaskStatus;
-  createById: string;
+  createdById: string;
   createdAt: Date;
   updatedAt: Date;
 };

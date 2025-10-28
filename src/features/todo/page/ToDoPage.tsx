@@ -14,15 +14,9 @@ export default function ToDoPage() {
     DONE: [],
   };
 
-  async function callAPIGetTodos() {
-    const todos = await getTodosApi();
-    console.log('api được load lại');
-    return todos;
-  }
-
   const { data: todos, isSuccess } = useQuery({
     queryKey: ['todos'],
-    queryFn: callAPIGetTodos,
+    queryFn: getTodosApi,
     staleTime: 60000, // 1 phút
   });
 
@@ -31,18 +25,6 @@ export default function ToDoPage() {
       allTasks[task.status].push(task);
     });
   }
-
-  // function callDropEvent(taskid: string, fromColumn: TaskStatus, toColumn: TaskStatus): void {
-  //   if (fromColumn === toColumn) return;
-  //   const task = allTasks[fromColumn].find((t) => t.id === taskid);
-  //   if (task) {
-  //     setAllTasks((prev) => ({
-  //       ...prev,
-  //       [fromColumn]: prev[fromColumn].filter((t) => t.id !== taskid),
-  //       [toColumn]: [...prev[toColumn], { ...task, status: toColumn }],
-  //     }));
-  //   }
-  // }
 
   return (
     <div className="w-full h-[calc(100vh-4.5rem)] flex overflow-x-auto p-4">

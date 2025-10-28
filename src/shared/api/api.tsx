@@ -39,6 +39,7 @@ api.interceptors.response.use(
   },
   (error) => {
     const { response } = error;
+    console.log(error.config.data);
     if (!response) {
       console.error('Network Error:', error);
       return Promise.reject(error);

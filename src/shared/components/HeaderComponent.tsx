@@ -15,7 +15,7 @@ export default function HeaderComponent() {
         res.data.data.user.username.slice(0, res.data.data.user.username.indexOf('@')),
       ),
     enabled: !!localStorage.getItem('accessToken'),
-    staleTime: 60000, // 1 phút
+    staleTime: 300000, // 5 phút
   });
 
   // const userName = queryClient.getQueryData<string>(['userName']);

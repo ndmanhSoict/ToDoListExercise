@@ -3,6 +3,11 @@ import type { Task } from '@type/TypeTask';
 import TaskComponent from './TaskComponent';
 import type { TaskStatus } from '@type/TypeTask';
 import ModalAddTask from './ModalAddNewTask';
+import { useMutation } from '@tanstack/react-query';
+import { updateTodoApi } from '@features/todo/api/todoAPI';
+import { queryClient } from '@main';
+import { toast } from 'react-toastify';
+import type { AxiosError } from 'axios';
 
 export default function ColumnTask({
   header,
@@ -15,21 +20,43 @@ export default function ColumnTask({
   proptaskList: Task[];
   // onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
-  const [taskList] = useState<Task[]>([]);
-  const list = [...proptaskList, ...taskList];
   const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
   function CloseModal() {
     setOpenModalAddNewTask(false);
   }
+
+  const mutationDropTask = useMutation({
+    mutationFn: async (newPayloadAPI: Omit<Task, 'createdById' | 'createdAt' | 'updatedAt'>) => {
+      return await updateTodoApi(newPayloadAPI);
+    },
+    onSuccess: () => {
+      console.log('Cập nhật trạng thái task thành công');
+      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
+    },
+    onError: (error) => {
+      const err = error as AxiosError<{ error?: string }>;
+      if (err.request) {
+        toast.error(err.response?.data?.error);
+      }
+    },
+  });
 
   return (
     <div
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
         e.preventDefault();
-        const data = e.dataTransfer.getData('id');
-        const fromColumn = e.dataTransfer.getData('fromColumn') as TaskStatus;
-        console.log('Đã thả phần tử:', data, 'từ cột', fromColumn, 'vào cột', header);
+        const data = JSON.parse(e.dataTransfer.getData('task'));
+        console.log('Đã thả phần tử:', data, 'vào cột', header);
+        const {
+          createdById: _createdById,
+          createdAt: _createdAt,
+          updatedAt: _updatedAt,
+          ...payloadAPI
+        } = data;
+        console.log('Payload API:', payloadAPI);
+        const newPayloadAPI = { ...payloadAPI, status: header };
+        mutationDropTask.mutate(newPayloadAPI);
         // onDropEvent(data, fromColumn, header);
       }}
       className="flex flex-col flex-shrink-0 w-64 bg-white shadow m-4 rounded p-1 h-fit"
@@ -38,8 +65,8 @@ export default function ColumnTask({
         <h2 className="font-bold text-lg">{header}</h2>
         <p className="text-sm text-gray-500">{count} tasks</p>
       </div>
-      {list.map((task) => (
-        <TaskComponent key={task.id} task={task} fromColumn={header} />
+      {proptaskList.map((task) => (
+        <TaskComponent key={task.id} task={task} />
       ))}
       {header == 'TODO' ? (
         <button

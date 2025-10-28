@@ -1,4 +1,5 @@
 import api from '@shared/api/api';
+import type { Task } from '@shared/type/TypeTask';
 
 async function getTodosApi() {
   const response = await api.get('/todos?limit=100');
@@ -26,4 +27,15 @@ async function createNewTodoApi(body: {
   });
   return response;
 }
-export { getTodosApi, createNewTodoApi };
+
+async function updateTodoApi(body: Omit<Task, 'createdById' | 'createdAt' | 'updatedAt'>) {
+  const response = await api.put('/todos/' + body.id, body);
+  // console.log('API response:', response);
+  return response.data.data.todos;
+}
+
+async function deleteTodoApi(id: string) {
+  const response = await api.delete('/todos/' + id);
+  return response.data.data.todos;
+}
+export { getTodosApi, createNewTodoApi, updateTodoApi, deleteTodoApi };
