@@ -39,12 +39,4 @@ async function getProfileApi() {
   return response;
 }
 
-async function refreshTokenApi() {
-  const refreshToken = localStorage.getItem('refreshToken');
-  const response = await api.post('/auth/refresh-token', {
-    refreshToken: refreshToken,
-  });
-  return response;
-}
-
-export { loginApi, registerApi, logoutApi, getProfileApi, refreshTokenApi };
+export { loginApi, registerApi, logoutApi, getProfileApi };
