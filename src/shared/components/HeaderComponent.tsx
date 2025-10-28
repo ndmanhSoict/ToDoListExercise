@@ -5,6 +5,7 @@ import LogoText from '@assets/images/logo-text.png';
 import { useQuery } from '@tanstack/react-query';
 import { getProfileApi, logoutApi } from '@api/authAPI';
 import { queryClient } from '@main';
+import { toast } from 'react-toastify';
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ export default function HeaderComponent() {
               onClick={() => {
                 logoutApi();
                 queryClient.setQueryData(['userName'], null);
+                queryClient.clear();
+                localStorage.clear();
+                toast.success('Logged out successfully!');
                 navigate({ to: '/' });
               }}
             >

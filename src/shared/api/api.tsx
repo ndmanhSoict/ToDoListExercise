@@ -33,10 +33,15 @@ api.interceptors.response.use(
     }
     switch (response.status) {
       case 401:
+        if (
+          error.config.url.includes('/auth/login') ||
+          error.config.url.includes('/auth/register')
+        ) {
+          return Promise.reject(error);
+        }
         console.log('Unauthorized! Please log in again.');
         if (error.config.url.includes('/auth/refresh-token')) {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
+          localStorage.clear();
           queryClient.removeQueries({ queryKey: ['userName'] });
           toast.error('Session expired. Please log in again.');
           window.location.href = '/login';
@@ -61,6 +66,7 @@ api.interceptors.response.use(
             });
             return newResponse;
           }
+          return;
         }
         break;
       case 403:
