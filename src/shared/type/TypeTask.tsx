@@ -1,8 +1,8 @@
 export type Task = {
   id: string;
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   description: string;
   assignee: string;
   priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT' | 'HIGHEST';

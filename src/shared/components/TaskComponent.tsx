@@ -8,10 +8,14 @@ export default function TaskComponent({ task }: { task: Task }) {
   function handleOpenCloseModal(): void {
     setOpenModalDetail(!openModalDetail);
   }
+  // function getTaskColor(priority: string, endDate: string): string {
+
+  // }
   return (
     <TaskContext.Provider value={{ handleOpenCloseModal }}>
       <div
-        className="border p-2 mb-4 rounded bg-white shadow w-48 block mx-auto"
+        // className={`border p-2 mb-4 rounded  shadow w-48 block mx-auto ${getTaskColor(task.priority, task.endDate)}`}
+        className={`border p-2 mb-4 rounded  shadow w-48 block mx-auto`}
         draggable={true}
         onDragStart={(e) => {
           e.dataTransfer.setData('task', JSON.stringify(task));
