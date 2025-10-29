@@ -47,30 +47,32 @@ export default function ColumnTask({
       onDrop={(e) => {
         e.preventDefault();
         const data = JSON.parse(e.dataTransfer.getData('task'));
-        console.log('Đã thả phần tử:', data, 'vào cột', header);
+        // console.log('Đã thả phần tử:', data, 'vào cột', header);
         const {
           createdById: _createdById,
           createdAt: _createdAt,
           updatedAt: _updatedAt,
           ...payloadAPI
         } = data;
-        console.log('Payload API:', payloadAPI);
         const newPayloadAPI = { ...payloadAPI, status: header };
         mutationDropTask.mutate(newPayloadAPI);
-        // onDropEvent(data, fromColumn, header);
       }}
-      className="flex flex-col flex-shrink-0 w-64 bg-white shadow m-4 rounded p-1 h-fit"
+      className="flex flex-col flex-shrink-0 w-52 bg-white shadow m-4 rounded p-1 h-fit"
     >
       <div className="flex justify-between items-center px-2 mb-4">
-        <h2 className="font-bold text-lg">{header}</h2>
-        <p className="text-sm text-gray-500">{count} tasks</p>
+        <h2 className="font-bold text-base">{header}</h2>
+        <p className="text-sm text-gray-500">
+          {count < 2 ? (count < 1 ? null : `${count} task`) : `${count} tasks`}
+        </p>
       </div>
-      {proptaskList.map((task) => (
-        <TaskComponent key={task.id} task={task} />
-      ))}
+      {count > 0 ? (
+        proptaskList.map((task) => <TaskComponent key={task.id} task={task} />)
+      ) : (
+        <p className="text-gray-500 italic text-center mb-4">No task in this status</p>
+      )}
       {header == 'TODO' ? (
         <button
-          className=" text-black/65 py-2 px-4 rounded hover:bg-gray-400/25 w-1/2 self-end"
+          className=" text-black/65 p-2 rounded hover:bg-gray-400/25 w-1/2 self-end"
           onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
         >
           + Add Task

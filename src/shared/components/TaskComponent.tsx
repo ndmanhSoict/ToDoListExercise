@@ -11,14 +11,14 @@ export default function TaskComponent({ task }: { task: Task }) {
   return (
     <TaskContext.Provider value={{ handleOpenCloseModal }}>
       <div
-        className="border p-4 mb-4 rounded bg-white shadow w-56 block mx-auto"
+        className="border p-2 mb-4 rounded bg-white shadow w-48 block mx-auto"
         draggable={true}
         onDragStart={(e) => {
           e.dataTransfer.setData('task', JSON.stringify(task));
         }}
         onClick={() => handleOpenCloseModal()}
       >
-        <h2 className="text-xl font-bold">{task.name}</h2>
+        <h2 className="text-base font-bold break-words whitespace-normal">{task.name}</h2>
         {/* <p className="text-sm text-gray-500">Created at: {task.createdAt.toDateString()}</p>
       <p className="text-sm text-gray-500">Updated at: {task.updatedAt.toDateString()}</p> */}
       </div>

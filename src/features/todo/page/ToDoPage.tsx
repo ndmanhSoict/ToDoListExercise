@@ -1,7 +1,7 @@
 import ColumnTask from '@shared/components/ColumnTask';
 import type { Task } from '@shared/type/TypeTask';
 import type { TaskStatus } from '@shared/type/TypeTask';
-import { getTodosApi } from '../api/todoAPI';
+import { getAllTodosApi } from '../api/todoAPI';
 import { useQuery } from '@tanstack/react-query';
 
 export default function ToDoPage() {
@@ -16,7 +16,7 @@ export default function ToDoPage() {
 
   const { data: todos, isSuccess } = useQuery({
     queryKey: ['todos'],
-    queryFn: getTodosApi,
+    queryFn: getAllTodosApi,
     staleTime: 60000, // 1 phút
   });
 

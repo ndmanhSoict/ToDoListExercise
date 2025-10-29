@@ -2,26 +2,26 @@ import { z } from 'zod';
 
 export const registerSchema = z
   .object({
-    email: z.string().email('Email không hợp lệ'),
+    email: z.string().nonempty('Email is required').email('Email invalid'),
     password: z
       .string()
-      .min(8, 'Mật khẩu ít nhất 8 ký tự')
-      .regex(/[A-Z]/, 'Phải có ít nhất 1 chữ cái in hoa')
-      .regex(/[a-z]/, 'Phải có ít nhất 1 chữ cái thường')
-      .regex(/[0-9]/, 'Phải có ít nhất 1 chữ số')
-      .regex(/[^A-Za-z0-9]/, 'Phải có ít nhất 1 ký tự đặc biệt'),
-    confirmPassword: z.string(),
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Must contain at least 1 uppercase letter')
+      .regex(/[a-z]/, 'Must contain at least 1 lowercase letter')
+      .regex(/[0-9]/, 'Must contain at least 1 number')
+      .regex(/[^A-Za-z0-9]/, 'Must contain at least 1 special character'),
+    confirmPassword: z.string().min(1, 'Confirm password is required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
-    message: 'Mật khẩu xác nhận không khớp',
+    message: 'Confirm password does not match',
   });
 
 export type RegisterSchema = z.infer<typeof registerSchema>;
 
 export const loginSchema = z.object({
-  email: z.string().email('Email không hợp lệ'),
-  password: z.string().nonempty('Mật khẩu là bắt buộc'),
+  email: z.string().nonempty('Email is required').email('Email invalid'),
+  password: z.string().nonempty('Password is required'),
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;

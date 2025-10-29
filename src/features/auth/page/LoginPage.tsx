@@ -2,7 +2,7 @@ import { useState } from 'react';
 import InputAuth from '@shared/components/InputAuth';
 import ButtonBasic from '@shared/components/ButtonBasic';
 import { useForm } from 'react-hook-form';
-import { loginSchema, type LoginSchema } from '../schemas/authSchema';
+import { loginSchema, type LoginSchema } from '@schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useMutation } from '@tanstack/react-query';
@@ -25,7 +25,7 @@ export default function LoginPage() {
       return res;
     },
     onSuccess: (response) => {
-      console.log('Login successful:', response.data.data);
+      // console.log('Login successful:', response.data.data);
       localStorage.setItem('accessToken', response.data.data.accessToken);
       localStorage.setItem('refreshToken', response.data.data.refreshToken);
       const username = response.data.data.user.username;
@@ -68,7 +68,6 @@ export default function LoginPage() {
             nameValidate="email"
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
-            required={true}
           />
           {/* <br className="my-4" /> */}
           <InputAuth
@@ -79,14 +78,15 @@ export default function LoginPage() {
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i
-                className="material-icons hover:cursor-pointer"
+                className={`material-icons hover:cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 ${
+                  hidePassword ? 'opacity-70' : 'opacity-100 text-blue-500'
+                }`}
                 onClick={() => setHidePassword(!hidePassword)}
               >
                 {hidePassword ? 'visibility_off' : 'visibility'}
               </i>
             }
             placeholder="Input your password"
-            required
           />
           {/* <br className="my-4" /> */}
           <a

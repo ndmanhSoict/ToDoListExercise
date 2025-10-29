@@ -2,7 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import ButtonBasic from './ButtonBasic';
 import LogoIcon from '@assets/images/logo-icon.png';
 import LogoText from '@assets/images/logo-text.png';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getProfileApi, logoutApi } from '@api/authAPI';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
@@ -19,6 +19,18 @@ export default function HeaderComponent() {
     staleTime: 300000, // 5 phút
   });
 
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      return await logoutApi();
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(['userName'], null);
+      queryClient.clear();
+      localStorage.clear();
+      toast.success('Logged out successfully!');
+      navigate({ to: '/' });
+    },
+  });
   // const userName = queryClient.getQueryData<string>(['userName']);
   // console.log('userName header là: ', userName);
 
@@ -53,14 +65,7 @@ export default function HeaderComponent() {
             Hi, {userName} !
             <button
               className="underline italic hover:cursor-pointer hover:text-blue-400 pl-2"
-              onClick={() => {
-                logoutApi();
-                queryClient.setQueryData(['userName'], null);
-                queryClient.clear();
-                localStorage.clear();
-                toast.success('Logged out successfully!');
-                navigate({ to: '/' });
-              }}
+              onClick={() => logoutMutation.mutate()}
             >
               Logout
             </button>

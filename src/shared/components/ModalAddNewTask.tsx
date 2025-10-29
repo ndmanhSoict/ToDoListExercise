@@ -120,7 +120,6 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 <option value={'IN_DEPLOYMENT'}>IN_DEPLOYMENT</option>
                 <option value={'IN_TESTING'}>IN_TESTING</option>
                 <option value={'DONE'}>DONE</option>
-                <option value={'CREATED'}>CREATED</option>
               </select>
               <pre className="text-red-500 text-sm">
                 {errors.status ? errors.status.message : ' '}

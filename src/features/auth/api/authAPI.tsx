@@ -1,5 +1,4 @@
 import api from '@shared/api/api';
-import { queryClient } from '@main';
 
 async function loginApi(userData: { username: string; password: string }) {
   const response = await api.post('/auth/login', {
@@ -25,9 +24,6 @@ async function registerApi(registerData: {
 async function logoutApi() {
   try {
     const response = await api.post('/auth/logout');
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    queryClient.setQueryData(['userName'], null);
     return response;
   } catch (error) {
     console.error('Logout failed:', error);

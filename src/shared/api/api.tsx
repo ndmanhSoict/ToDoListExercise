@@ -25,8 +25,6 @@ api.interceptors.response.use(
   },
   async (error) => {
     const { response } = error;
-    console.log('config.url:', error);
-    // console.log(error.config.data);
     if (!response) {
       console.error('Network Error:', error);
       return Promise.reject(error);
@@ -35,27 +33,26 @@ api.interceptors.response.use(
       case 401:
         if (
           error.config.url.includes('/auth/login') ||
+          error.config.url.includes('/auth/logout') ||
           error.config.url.includes('/auth/register')
         ) {
           return Promise.reject(error);
         }
-        console.log('Unauthorized! Please log in again.');
         if (error.config.url.includes('/auth/refresh-token')) {
           localStorage.clear();
-          queryClient.removeQueries({ queryKey: ['userName'] });
-          toast.error('Session expired. Please log in again.');
-          window.location.href = '/login';
+          queryClient.clear();
+          toast.error('Session expired. Redirecting to login...');
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 2000);
           return;
         } else {
-          console.log('da chay vao else');
           toast.info('Refreshing session, please wait...');
           const refreshToken = localStorage.getItem('refreshToken');
-          console.log('refreshToken:', refreshToken);
           const refreshResponse = await api.post('/auth/refresh-token', {
             refreshToken: refreshToken ?? '',
           });
           if (refreshResponse) {
-            console.log('refreshResponse:', refreshResponse);
             localStorage.setItem('accessToken', refreshResponse.data.data.accessToken);
             localStorage.setItem('refreshToken', refreshResponse.data.data.refreshToken);
             toast.success('Session refreshed successfully! Continuing your request...');

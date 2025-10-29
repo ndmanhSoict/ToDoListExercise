@@ -30,7 +30,7 @@ export default function RegisterPage() {
     },
     onError: (error) => {
       const err = error as AxiosError<{ error?: string }>;
-      console.log(err.response?.status);
+      // console.log(err.response?.status);
       toast.error(`Error: ${err.response?.data?.error}. Please try with other email!`);
     },
   });
@@ -82,7 +82,6 @@ export default function RegisterPage() {
             nameValidate="email"
             iconleft={<i className="material-icons">mail_outline</i>}
             placeholder="Input your email"
-            required={true}
             // propOnChange={mutationCheckEmail.mutate}
           />
           {/* <br className="my-4" /> */}
@@ -94,14 +93,15 @@ export default function RegisterPage() {
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i
-                className="material-icons hover:cursor-pointer"
+                className={`material-icons hover:cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 ${
+                  hidePassword ? 'opacity-70' : 'opacity-100 text-blue-500'
+                }`}
                 onClick={() => setHidePassword(!hidePassword)}
               >
                 {hidePassword ? 'visibility_off' : 'visibility'}
               </i>
             }
             placeholder="Input your password"
-            required={true}
           />
 
           <InputAuth
@@ -112,14 +112,15 @@ export default function RegisterPage() {
             iconleft={<i className="material-icons">lock_outline</i>}
             iconright={
               <i
-                className="material-icons hover:cursor-pointer"
+                className={`material-icons hover:cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 ${
+                  hideConfirmPassword ? 'opacity-70' : 'opacity-100 text-blue-500'
+                }`}
                 onClick={() => setHideConfirmPassword(!hideConfirmPassword)}
               >
                 {hideConfirmPassword ? 'visibility_off' : 'visibility'}
               </i>
             }
             placeholder="Input your password again"
-            required={true}
           />
 
           <div className="mb-4 relative w-full">
