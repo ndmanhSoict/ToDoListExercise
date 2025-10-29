@@ -8,8 +8,8 @@ export type Task = {
   priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT' | 'HIGHEST';
   status: TaskStatus;
   createdById: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type TaskStatus =
