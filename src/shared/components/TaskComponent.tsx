@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Task } from '@type/TypeTask';
 import ModalTaskDetail from './ModalTaskDetail';
 import { TaskContext } from '@shared/context/TaskContext';
+import getDayLeft from '@shared/utils/getDayLeft';
 
 export default function TaskComponent({ task }: { task: Task }) {
   const [openModalDetail, setOpenModalDetail] = useState(false);
@@ -10,12 +11,7 @@ export default function TaskComponent({ task }: { task: Task }) {
   }
 
   function getTaskColor(priority: string, endDateString: string): string {
-    const today = new Date();
-    const endDate = new Date(endDateString);
-    today.setHours(0, 0, 0, 0);
-    endDate.setHours(0, 0, 0, 0);
-    const diffTime = endDate.getTime() - today.getTime();
-    const dayLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const dayLeft = getDayLeft(endDateString);
 
     let bgColr: string = '';
 
@@ -26,7 +22,7 @@ export default function TaskComponent({ task }: { task: Task }) {
     } else if (dayLeft <= 5) {
       bgColr = 'bg-yellow-100';
     } else if (dayLeft <= 7) {
-      bgColr = 'bg-blue-50';
+      bgColr = 'bg-blue-100';
     } else {
       bgColr = 'bg-white';
     }
