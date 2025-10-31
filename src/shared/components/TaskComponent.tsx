@@ -8,14 +8,44 @@ export default function TaskComponent({ task }: { task: Task }) {
   function handleOpenCloseModal(): void {
     setOpenModalDetail(!openModalDetail);
   }
-  // function getTaskColor(priority: string, endDate: string): string {
 
-  // }
+  function getTaskColor(priority: string, endDateString: string): string {
+    const today = new Date();
+    const endDate = new Date(endDateString);
+    today.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+    const diffTime = endDate.getTime() - today.getTime();
+    const dayLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    let bgColr: string = '';
+
+    if (dayLeft < 0) {
+      bgColr = 'bg-gray-200';
+    } else if (dayLeft < 3) {
+      bgColr = 'bg-red-200';
+    } else if (dayLeft <= 5) {
+      bgColr = 'bg-yellow-100';
+    } else if (dayLeft <= 7) {
+      bgColr = 'bg-blue-50';
+    } else {
+      bgColr = 'bg-white';
+    }
+
+    const borderLine: Record<string, string> = {
+      LOW: 'border-r-gray-400',
+      MEDIUM: 'border-r-green-500',
+      HIGH: 'border-r-yellow-500',
+      HIGHEST: 'border-r-orange-500',
+      URGENT: 'border-r-red-600',
+    };
+
+    return `${bgColr} border-r-8 ${borderLine[priority]}`;
+  }
   return (
     <TaskContext.Provider value={{ handleOpenCloseModal }}>
       <div
-        // className={`border p-2 mb-4 rounded  shadow w-48 block mx-auto ${getTaskColor(task.priority, task.endDate)}`}
-        className={`border p-2 mb-4 rounded  shadow w-48 block mx-auto`}
+        className={`border p-2 mb-4 rounded w-48 block mx-auto ${getTaskColor(task.priority, task.endDate)} hover:shadow-xl hover:scale-102 transition-all`}
+        // className={`border p-2 mb-4 rounded  shadow w-48 block mx-auto`}
         draggable={true}
         onDragStart={(e) => {
           e.dataTransfer.setData('task', JSON.stringify(task));
