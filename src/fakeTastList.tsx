@@ -1,0 +1,179 @@
+import { type Task } from '@shared/type/TypeTask';
+
+export const fakeTaskList: Task[] = [
+  {
+    id: '1',
+    title: 'Create project structure',
+    description: 'Setup folders, install dependencies, and initialize git repo.',
+    status: 'CREATED',
+    createdAt: new Date('2025-10-01T09:00:00'),
+    updatedAt: new Date('2025-10-01T09:30:00'),
+  },
+  {
+    id: '2',
+    title: 'Design database schema',
+    description: 'Define entities and relationships for users and tasks.',
+    status: 'TODO',
+    createdAt: new Date('2025-10-02T08:30:00'),
+    updatedAt: new Date('2025-10-02T10:00:00'),
+  },
+  {
+    id: '3',
+    title: 'Implement authentication module',
+    description: 'Create login, register, and JWT handling logic.',
+    status: 'IN_PROGRESS',
+    createdAt: new Date('2025-10-03T11:00:00'),
+    updatedAt: new Date('2025-10-03T16:30:00'),
+  },
+  {
+    id: '4',
+    title: 'Code review for auth feature',
+    description: 'Review pull request #15 for the authentication flow.',
+    status: 'IN_REVIEW',
+    createdAt: new Date('2025-10-04T10:00:00'),
+    updatedAt: new Date('2025-10-04T11:00:00'),
+  },
+  {
+    id: '5',
+    title: 'Deploy backend API to staging',
+    description: 'Deploy version 0.3.0 of backend to the staging server.',
+    status: 'DEPLOY',
+    createdAt: new Date('2025-10-05T14:00:00'),
+    updatedAt: new Date('2025-10-05T14:30:00'),
+  },
+  {
+    id: '6',
+    title: 'Run automated test suite',
+    description: 'Execute Cypress and Jest tests on staging environment.',
+    status: 'IN_TESTING',
+    createdAt: new Date('2025-10-06T09:00:00'),
+    updatedAt: new Date('2025-10-06T10:15:00'),
+  },
+  {
+    id: '7',
+    title: 'Verify bug fixes from QA team',
+    description: 'Check if bug #32 and #45 are resolved properly.',
+    status: 'VERIFY',
+    createdAt: new Date('2025-10-07T08:00:00'),
+    updatedAt: new Date('2025-10-07T09:20:00'),
+  },
+  {
+    id: '8',
+    title: 'Release version 1.0.0',
+    description: 'Publish stable build to production.',
+    status: 'DONE',
+    createdAt: new Date('2025-10-08T07:00:00'),
+    updatedAt: new Date('2025-10-08T07:45:00'),
+  },
+  // --- thêm 10 task mới ---
+  {
+    id: '9',
+    title: 'Setup CI/CD pipeline',
+    description: 'Configure GitHub Actions to automate testing and deployment.',
+    status: 'CREATED',
+    createdAt: new Date('2025-10-08T08:00:00'),
+    updatedAt: new Date('2025-10-08T08:15:00'),
+  },
+  {
+    id: '10',
+    title: 'Add dark mode support',
+    description: 'Implement theme switching between light and dark mode.',
+    status: 'TODO',
+    createdAt: new Date('2025-10-08T09:30:00'),
+    updatedAt: new Date('2025-10-08T09:45:00'),
+  },
+  {
+    id: '11',
+    title: 'Optimize API performance',
+    description: 'Reduce response time for user and task endpoints.',
+    status: 'IN_PROGRESS',
+    createdAt: new Date('2025-10-08T10:00:00'),
+    updatedAt: new Date('2025-10-08T10:40:00'),
+  },
+  {
+    id: '12',
+    title: 'Review new dashboard design',
+    description: 'UX team to review Figma prototype and suggest improvements.',
+    status: 'IN_REVIEW',
+    createdAt: new Date('2025-10-08T11:15:00'),
+    updatedAt: new Date('2025-10-08T11:30:00'),
+  },
+  {
+    id: '13',
+    title: 'Deploy frontend v1.1.0',
+    description: 'Push latest build to Netlify and verify environment variables.',
+    status: 'DEPLOY',
+    createdAt: new Date('2025-10-08T12:00:00'),
+    updatedAt: new Date('2025-10-08T12:20:00'),
+  },
+  {
+    id: '14',
+    title: 'Test responsive layout',
+    description: 'Ensure app layout works on mobile, tablet, and desktop.',
+    status: 'IN_TESTING',
+    createdAt: new Date('2025-10-08T13:00:00'),
+    updatedAt: new Date('2025-10-08T13:45:00'),
+  },
+  {
+    id: '15',
+    title: 'Verify payment integration',
+    description: 'Confirm PayPal and Stripe integrations function properly.',
+    status: 'VERIFY',
+    createdAt: new Date('2025-10-08T14:00:00'),
+    updatedAt: new Date('2025-10-08T14:10:00'),
+  },
+  {
+    id: '16',
+    title: 'Finish onboarding tutorial',
+    description: 'Create step-by-step onboarding for new users.',
+    status: 'DONE',
+    createdAt: new Date('2025-10-08T15:00:00'),
+    updatedAt: new Date('2025-10-08T15:20:00'),
+  },
+  {
+    id: '17',
+    title: 'Setup error tracking',
+    description: 'Integrate Sentry for error monitoring in production.',
+    status: 'IN_PROGRESS',
+    createdAt: new Date('2025-10-08T16:00:00'),
+    updatedAt: new Date('2025-10-08T16:30:00'),
+  },
+  {
+    id: '18',
+    title: 'Document API endpoints',
+    description: 'Write OpenAPI (Swagger) documentation for public APIs.',
+    status: 'TODO',
+    createdAt: new Date('2025-10-08T17:00:00'),
+    updatedAt: new Date('2025-10-08T17:45:00'),
+  },
+];
+
+// {
+//   "name": "Complete project documentation",
+//   "description": "Write comprehensive API documentation",
+//   "startDate": "2024-01-01T09:00:00Z",
+//   "endDate": "2024-01-05T17:00:00Z",
+//   "assignee": "johndoe",
+//   "priority": "HIGH",
+//   "status": "TODO"
+// }
+
+// {
+//   "success": true,
+//   "message": "Todo created successfully",
+//   "data": {
+//     "todo": {
+//       "id": "string",
+//       "name": "string",
+//       "description": "string",
+//       "startDate": "2025-10-22T07:31:00.349Z",
+//       "endDate": "2025-10-22T07:31:00.349Z",
+//       "assignee": "string",
+//       "priority": "LOW",
+//       "status": "TODO",
+//       "createdById": "string",
+//       "createdAt": "2025-10-22T07:31:00.349Z",
+//       "updatedAt": "2025-10-22T07:31:00.349Z"
+//     }
+//   }
+// }
