@@ -3,6 +3,7 @@ import type { Task } from '@type/TypeTask';
 import ModalTaskDetail from './ModalTaskDetail';
 import { TaskContext } from '@shared/context/TaskContext';
 import getDayLeft from '@shared/utils/getDayLeft';
+import { queryClient } from '@main';
 
 export default function TaskComponent({ task }: { task: Task }) {
   const [openModalDetail, setOpenModalDetail] = useState(false);
@@ -16,15 +17,18 @@ export default function TaskComponent({ task }: { task: Task }) {
     let bgColr: string = '';
 
     if (dayLeft < 0) {
-      bgColr = 'bg-gray-200';
+      bgColr = 'bg-gray-200 opacity-70';
     } else if (dayLeft < 3) {
+      //Còn lại 0 1 2
       bgColr = 'bg-red-200';
     } else if (dayLeft <= 5) {
+      //Còn lại 3 4 5
       bgColr = 'bg-yellow-100';
-    } else if (dayLeft <= 7) {
-      bgColr = 'bg-blue-100';
+    } else if (dayLeft <= 10) {
+      //Còn lại 6 -> 10
+      bgColr = 'bg-green-100';
     } else {
-      bgColr = 'bg-white';
+      bgColr = 'bg-blue-100'; //Hơn 10
     }
 
     const borderLine: Record<string, string> = {
@@ -46,6 +50,8 @@ export default function TaskComponent({ task }: { task: Task }) {
         onDragStart={(e) => {
           e.dataTransfer.setData('task', JSON.stringify(task));
         }}
+        onDrag={() => queryClient.setQueryData(['onDrag'], true)}
+        onDragEnd={() => queryClient.setQueryData(['onDrag'], false)}
         onClick={() => handleOpenCloseModal()}
       >
         <h2 className="text-base font-bold break-words whitespace-normal">{task.name}</h2>

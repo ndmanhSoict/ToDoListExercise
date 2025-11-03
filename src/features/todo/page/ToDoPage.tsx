@@ -1,20 +1,49 @@
 import ColumnTask from '@shared/components/ColumnTask';
 import type { Task } from '@shared/type/TypeTask';
 import type { TaskStatus } from '@shared/type/TypeTask';
-import { getAllTodosApi } from '../api/todoAPI';
-import { useQuery } from '@tanstack/react-query';
+import { deleteTodoApi, getAllTodosApi } from '../api/todoAPI';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortAmountDown } from '@fortawesome/free-solid-svg-icons';
 import { useMemo, useState } from 'react';
+import IconTrashCan from '@assets/icons/trash-can.svg?react';
+import IconOpenTrashCan from '@assets/icons/open-trash-can.svg?react';
+import ModalAddTask from '@shared/components/ModalAddNewTask';
+import { queryClient } from '@main';
+import { toast } from 'react-toastify';
 
 export default function ToDoPage() {
-  const [sortBy, setSortBy] = useState('created-desc');
+  const [sortBy, setSortBy] = useState('created-asc');
   const [showTask, setShowTask] = useState('all');
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
+
+  function CloseModal() {
+    setOpenModalAddNewTask(false);
+  }
 
   const { data: todos, isSuccess } = useQuery({
     queryKey: ['todos'],
     queryFn: getAllTodosApi,
     staleTime: 60000, // 1 phút
+  });
+
+  const { data: onDrag } = useQuery({
+    queryKey: ['onDrag'],
+    queryFn: () => queryClient.getQueryData(['onDrag']),
+  });
+
+  const mutationDeleteTask = useMutation({
+    mutationFn: async (taskId: string) => {
+      return await deleteTodoApi(taskId);
+    },
+    onSuccess: () => {
+      toast.success('Task deleted successfully');
+      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
+    },
+    onError: (error) => {
+      toast.error('Error deleting task: ' + error.message + '. Please try again.');
+    },
   });
 
   const allTasks = useMemo(() => {
@@ -88,6 +117,12 @@ export default function ToDoPage() {
   return (
     <div className="flex flex-col h-[calc(100vh-4.5rem)]">
       <div className="h-fit w-fit mt-2 mx-auto flex gap-6">
+        <button
+          className="rounded-2xl bg-gray-100 shadow-xl px-4 py-2 hover:scale-110 hover:bg-gray-200 hover:shadow-2xl duration-200 transition-all"
+          onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
+        >
+          + Add New Task
+        </button>
         <div className="rounded-2xl bg-white px-4 py-2">
           <FontAwesomeIcon icon={faSortAmountDown} color="black" />
           <label>Sort by: </label>
@@ -124,6 +159,45 @@ export default function ToDoPage() {
           );
         })}
       </div>
+      <div
+        className={`w-28 h-28 rounded-full absolute right-5 bottom-5 ${isDragOver ? 'bg-red-200/80' : ''}`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsDragOver(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsDragOver(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const data = JSON.parse(e.dataTransfer.getData('task'));
+          console.log('Đã thả phần tử:', data);
+          setIsDragOver(false);
+          mutationDeleteTask.mutate(data.id);
+        }}
+      >
+        <div
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 ${isDragOver ? '' : 'bg-white/75'} rounded-full pointer-events-none`}
+        >
+          {/* {isDragOver ? (
+            <IconOpenTrashCan className="w-16 h-16 text-red-600 transition-all duration-200 pointer-events-none" />
+          ) : (
+            <IconTrashCan className="w-10 h-10 text-gray-600 hover:scale-110 transition-all duration-200 pointer-events-none" />
+          )} */}
+          {isDragOver ? (
+            <IconOpenTrashCan className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-15 h-15 text-red-600 pointer-events-none" />
+          ) : (
+            <IconTrashCan
+              className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 text-gray-600 hover:scale-120 transition-all duration-200 ${onDrag ? 'scale-120' : ''} pointer-events-none`}
+            />
+          )}
+        </div>
+      </div>
+      {openModalAddNewTask && <ModalAddTask propCloseModal={CloseModal} />}
     </div>
   );
 }

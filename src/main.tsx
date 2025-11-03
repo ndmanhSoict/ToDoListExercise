@@ -5,7 +5,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 // import { persistor, store } from './store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import './index.css';
@@ -52,7 +52,7 @@ if (!rootElement.innerHTML) {
         {/* <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}> */}
         <RouterProvider router={router} />
         <ToastContainer position="bottom-right" autoClose={2000} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         {/* </PersistGate> */}
         {/* </Provider> */}
       </QueryClientProvider>

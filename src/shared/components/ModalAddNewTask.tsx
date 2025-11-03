@@ -9,6 +9,9 @@ import { type TodoSchema, todoSchema } from '@features/todo/schemas/todoSchema';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
+import { createPortal } from 'react-dom';
+
+const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
   const {
@@ -29,12 +32,12 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
         startDate: convertDate(newTask.startDate, newTask.startTime),
         endDate: convertDate(newTask.endDate, newTask.endTime),
       };
-      console.log('Creating task:', taskToCreate);
+      // console.log('Creating task:', taskToCreate);
       const { startTime: _startTime, endTime: _endTime, ...apiBody } = taskToCreate;
       return await createNewTodoApi(apiBody);
     },
     onSuccess: () => {
-      // console.log('New task created successfully');
+      toast.success('New task created successfully');
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       propCloseModal();
     },
@@ -48,7 +51,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
   const onSubmit = (data: TodoSchema) => {
     mutationAddNewTask.mutate(data);
   };
-  return (
+  const modalContent = (
     <div
       className="absolute top-0 left-0 w-screen h-screen bg-gray-300/40"
       onClick={(e) => {
@@ -63,7 +66,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
           New Task
           <FontAwesomeIcon
             icon={faTimes}
-            className="text-2xl absolute top-1/2 right-4 transform -translate-y-1/2 hover:cursor-pointer"
+            className="text-2xl absolute top-1/2 right-4 transform -translate-y-1/2 hover:cursor-pointer hover:text-red-500 hover:scale-110 hover:shadow-2xl transition-all"
             onClick={() => propCloseModal()}
           />
         </p>
@@ -188,6 +191,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
       </div>
     </div>
   );
+  return createPortal(modalContent, modalRoot);
 }
 
 export default ModalAddTask;

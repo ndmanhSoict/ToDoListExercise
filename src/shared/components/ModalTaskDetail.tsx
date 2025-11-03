@@ -8,6 +8,9 @@ import { useMutation } from '@tanstack/react-query';
 import { deleteTodoApi, updateTodoApi } from '@features/todo/api/todoAPI';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
+import { createPortal } from 'react-dom';
+
+const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 export default function ModalTaskDetail({ task }: { task: Task }) {
   const [edit, setEdit] = useState(false);
@@ -106,7 +109,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
     },
   });
 
-  return (
+  const modalContent = (
     <div
       className="w-full h-screen absolute top-0 left-0 bg-gray-200/45"
       onClick={() => closeModalTaskDetail()}
@@ -360,6 +363,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
       )}
     </div>
   );
+  return createPortal(modalContent, modalRoot);
 }
 
 function ModalConfirmClose({ propOpenModalConfirm }: { propOpenModalConfirm: () => void }) {

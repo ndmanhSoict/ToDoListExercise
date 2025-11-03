@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import type { Task } from '@type/TypeTask';
 import TaskComponent from './TaskComponent';
 import type { TaskStatus } from '@type/TypeTask';
-import ModalAddTask from './ModalAddNewTask';
 import { useMutation } from '@tanstack/react-query';
 import { updateTodoApi } from '@features/todo/api/todoAPI';
 import { queryClient } from '@main';
@@ -20,11 +18,6 @@ export default function ColumnTask({
   proptaskList: Task[];
   // onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
-  const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
-  function CloseModal() {
-    setOpenModalAddNewTask(false);
-  }
-
   const mutationDropTask = useMutation({
     mutationFn: async (newPayloadAPI: Omit<Task, 'createdById' | 'createdAt' | 'updatedAt'>) => {
       return await updateTodoApi(newPayloadAPI);
@@ -57,7 +50,7 @@ export default function ColumnTask({
         const newPayloadAPI = { ...payloadAPI, status: header };
         mutationDropTask.mutate(newPayloadAPI);
       }}
-      className="flex flex-col flex-shrink-0 w-52 bg-white shadow m-4 rounded p-1 h-fit"
+      className="flex flex-col flex-shrink-0 w-52 bg-white shadow m-4 rounded p-1 h-fit hover:bg-gray-50"
     >
       <div className="flex justify-between items-center px-2 mb-4">
         <h2 className="font-bold text-base">{header}</h2>
@@ -70,15 +63,6 @@ export default function ColumnTask({
       ) : (
         <p className="text-gray-500 italic text-center mb-4">No task in this status</p>
       )}
-      {header == 'TODO' ? (
-        <button
-          className=" text-black/65 p-2 rounded hover:bg-gray-400/25 w-1/2 self-end"
-          onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
-        >
-          + Add Task
-        </button>
-      ) : null}
-      {openModalAddNewTask && <ModalAddTask propCloseModal={CloseModal} />}
     </div>
   );
 }
