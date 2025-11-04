@@ -13,28 +13,62 @@ import { queryClient } from '@main';
 import { toast } from 'react-toastify';
 import IconFilter from '@assets/icons/filter.svg?react';
 
+//Declare const variable
+const SORTBY_OPTIONS = [
+  { value: 'created-asc', label: 'Creation Date (Oldest to Newest)' },
+  { value: 'created-desc', label: 'Creation Date (Newest to Oldest)' },
+  { value: 'endDate-asc', label: 'End Date (Earliest to Latest)' },
+  { value: 'endDate-desc', label: 'End Date (Latest to Earliest)' },
+  { value: 'priority-asc', label: 'Priority (Low to High)' },
+  { value: 'priority-desc', label: 'Priority (High to Low)' },
+  { value: 'name-asc', label: 'Name (A to Z)' },
+  { value: 'name-desc', label: 'Name (Z to A)' },
+];
+const SHOW_TASK_OPTIONS = [
+  { value: 'all', label: 'All Tasks' },
+  { value: 'ongoing', label: 'Ongoing Tasks' },
+  { value: 'upcoming', label: 'Upcoming Tasks' },
+  { value: 'history', label: 'History Tasks' },
+];
+const PRIORITY_RANK: Record<string, number> = {
+  LOW: 1,
+  MEDIUM: 2,
+  HIGH: 3,
+  HIGHEST: 4,
+  URGENT: 5,
+};
+
+const createEmptyTaskMap = (): Record<TaskStatus, Task[]> => {
+  return {
+    TODO: [],
+    IN_PROGRESS: [],
+    IN_REVIEW: [],
+    IN_DEPLOYMENT: [],
+    IN_TESTING: [],
+    DONE: [],
+  };
+};
+
 export default function ToDoPage() {
-  const [sortBy, setSortBy] = useState('created-asc');
-  const [showTask, setShowTask] = useState('all');
+  //Devlare State
+  const [sortBy, setSortBy] = useState(SORTBY_OPTIONS[0].value);
+  const [showTask, setShowTask] = useState(SHOW_TASK_OPTIONS[0].value);
   const [isDragOver, setIsDragOver] = useState(false);
   const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
 
-  function CloseModal() {
-    setOpenModalAddNewTask(false);
-  }
-
+  //Declare variable use data from queryClient
   const { data: todos, isSuccess } = useQuery({
     queryKey: ['todos'],
     queryFn: getAllTodosApi,
     staleTime: 60000, // 1 phút
   });
-
   const { data: onDrag } = useQuery({
     queryKey: ['onDrag'],
     queryFn: () => queryClient.getQueryData(['onDrag']),
   });
 
+  //Declare mutation
   const mutationDeleteTask = useMutation({
     mutationFn: async (taskId: string) => {
       return await deleteTodoApi(taskId);
@@ -48,15 +82,10 @@ export default function ToDoPage() {
     },
   });
 
+  //Declare function
+  //get data todos from cache
   const allTasks = useMemo(() => {
-    const taskByStatus: Record<TaskStatus, Task[]> = {
-      TODO: [],
-      IN_PROGRESS: [],
-      IN_REVIEW: [],
-      IN_DEPLOYMENT: [],
-      IN_TESTING: [],
-      DONE: [],
-    };
+    const taskByStatus = createEmptyTaskMap();
     if (isSuccess && todos) {
       todos.forEach((task: Task) => {
         taskByStatus[task.status].push(task);
@@ -64,28 +93,30 @@ export default function ToDoPage() {
     }
     return taskByStatus;
   }, [todos, isSuccess]);
-
+  //sort, show todos based on the selected value
   const showTasks = useMemo(() => {
     const [sortField, sortType] = sortBy.split('-');
-    const filterTask: Record<TaskStatus, Task[]> = {
-      TODO: [],
-      IN_PROGRESS: [],
-      IN_REVIEW: [],
-      IN_DEPLOYMENT: [],
-      IN_TESTING: [],
-      DONE: [],
-    };
+    const filterTask = createEmptyTaskMap();
     (Object.keys(allTasks) as TaskStatus[]).forEach((status) => {
       filterTask[status] = allTasks[status].filter((task) => {
         const start = new Date(task.startDate).getTime();
         const end = new Date(task.endDate).getTime();
         const now = Date.now();
-        if (showTask === 'all') return true;
-        if (showTask === 'ongoing') return start <= now && now <= end;
-        if (showTask === 'upcoming') return start > now;
-        if (showTask === 'history') return end < now;
+        switch (showTask) {
+          case SHOW_TASK_OPTIONS[0].value:
+            return true;
+          case SHOW_TASK_OPTIONS[1].value:
+            return start <= now && now <= end;
+          case SHOW_TASK_OPTIONS[2].value:
+            return start > now;
+          case SHOW_TASK_OPTIONS[3].value:
+            return end < now;
+          default:
+            return;
+        }
       });
       filterTask[status].sort((a: Task, b: Task) => {
+        //Declare some type functions
         const sortTime = (a: string, b: string) => {
           if (sortType === 'asc') return new Date(a).getTime() - new Date(b).getTime();
           return new Date(b).getTime() - new Date(a).getTime();
@@ -95,64 +126,91 @@ export default function ToDoPage() {
           return b.localeCompare(a);
         };
         const sortPriority = (a: string, b: string) => {
-          const PRIORITY_RANK: Record<string, number> = {
-            LOW: 1,
-            MEDIUM: 2,
-            HIGH: 3,
-            HIGHEST: 4,
-            URGENT: 5,
-          };
-
           if (sortType === 'asc') return PRIORITY_RANK[a] - PRIORITY_RANK[b];
           return PRIORITY_RANK[b] - PRIORITY_RANK[a];
         };
-        if (sortField === 'created') return sortTime(a.createdAt, b.createdAt);
-        if (sortField === 'endDate') return sortTime(a.endDate, b.endDate);
-        if (sortField === 'priority') return sortPriority(a.priority, b.priority);
-        if (sortField === 'name') return sortStr(a.name, b.name);
-        return 0;
+        switch (sortField) {
+          case 'created':
+            return sortTime(a.createdAt, b.createdAt);
+          case 'endDate':
+            return sortTime(a.endDate, b.endDate);
+          case 'priority':
+            return sortPriority(a.priority, b.priority);
+          case 'name':
+            return sortStr(a.name, b.name);
+          default:
+            return 0;
+        }
       });
     });
     return filterTask;
   }, [sortBy, showTask, allTasks]);
 
+  //Declare funtion used in this component
+  function CloseModal() {
+    setOpenModalAddNewTask(false);
+  }
+  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragOver(true);
+  }
+  function handleDragLeave(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragOver(false);
+  }
+  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    const cached = queryClient.getQueryData(['taskDragging']);
+    if (!cached || typeof cached !== 'string') {
+      toast.error('Your request is not valid. Please try again!');
+      return;
+    }
+    const data = JSON.parse(cached);
+    // console.log('data được lấy ra:', data, 'id được ghi nhận là: ', data.id);
+    setIsDragOver(false);
+    mutationDeleteTask.mutate(data.id);
+  }
+
   return (
     <div className="flex flex-col h-[calc(100vh-4.5rem)]">
-      <div className="h-fit w-fit mt-2 mx-auto flex gap-6 z-1000">
+      {/* Button Add new Task, Select sort, select show mode, icon filter */}
+      <div className="h-fit w-fit mt-2 mx-auto flex gap-6 z-10">
+        {/* Button Add new Task */}
         <button
           className="rounded-2xl bg-gray-100 shadow-xl px-4 py-2 hover:scale-110 hover:bg-gray-200 hover:shadow-2xl duration-200 transition-all"
           onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
         >
           + Add New Task
         </button>
+        {/* Select sort */}
         <div className="rounded-2xl bg-white px-4 py-2 hidden sm:block">
           <FontAwesomeIcon icon={faSortAmountDown} color="black" />
           <label>Sort by: </label>
           <select defaultValue={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="created-asc">Creation Date (Oldest to Newest)</option>
-            <option value="created-desc">Creation Date (Newest to Oldest)</option>
-            <option value="endDate-asc">End Date (Earliest to Latest)</option>
-            <option value="endDate-desc">End Date (Latest to Earliest)</option>
-            <option value="priority-asc">Priority (Low to High)</option>
-            <option value="priority-desc">Priority (High to Low)</option>
-            <option value="name-asc">Name (A to Z)</option>
-            <option value="name-desc">Name (Z to A)</option>
+            {SORTBY_OPTIONS.map((obj) => (
+              <option value={obj.value}>{obj.label}</option>
+            ))}
           </select>
         </div>
+        {/* Select show mode */}
         <div className="rounded-2xl bg-white px-4 py-2 hidden md:block">
           <label>Show: </label>
           <select defaultValue={showTask} onChange={(e) => setShowTask(e.target.value)}>
-            <option value="all">All Tasks</option>
-            <option value="ongoing">Ongoing Tasks</option>
-            <option value="upcoming">Upcoming Tasks</option>
-            <option value="history">History Tasks</option>
+            {SHOW_TASK_OPTIONS.map((obj) => (
+              <option value={obj.value}>{obj.label}</option>
+            ))}
           </select>
         </div>
+        {/* Icon filter */}
         <div className="relative bg-white rounded-full w-12 h-12 hover:cursor-pointer md:hidden hover:bg-gray-300/500 hover:scale-110 hover:shadow-2xl transition-all duration-500">
           <IconFilter
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10"
             onClick={() => setOpenFilter(true)}
           />
+          {/* Open Filter Modal */}
           <div
             className={`fixed top-0 right-0 w-screen h-screen bg-gray-300/40 ${openFilter ? 'block' : 'hidden'}`}
             onClick={() => setOpenFilter(false)}
@@ -173,29 +231,24 @@ export default function ToDoPage() {
                   defaultValue={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
-                  <option value="created-asc">Creation Date (Oldest to Newest)</option>
-                  <option value="created-desc">Creation Date (Newest to Oldest)</option>
-                  <option value="endDate-asc">End Date (Earliest to Latest)</option>
-                  <option value="endDate-desc">End Date (Latest to Earliest)</option>
-                  <option value="priority-asc">Priority (Low to High)</option>
-                  <option value="priority-desc">Priority (High to Low)</option>
-                  <option value="name-asc">Name (A to Z)</option>
-                  <option value="name-desc">Name (Z to A)</option>
+                  {SORTBY_OPTIONS.map((obj) => (
+                    <option value={obj.value}>{obj.label}</option>
+                  ))}
                 </select>
               </div>
               <div className="flex justify-between items-center">
                 <label>Show: </label>
                 <select defaultValue={showTask} onChange={(e) => setShowTask(e.target.value)}>
-                  <option value="all">All Tasks</option>
-                  <option value="ongoing">Ongoing Tasks</option>
-                  <option value="upcoming">Upcoming Tasks</option>
-                  <option value="history">History Tasks</option>
+                  {SHOW_TASK_OPTIONS.map((obj) => (
+                    <option value={obj.value}>{obj.label}</option>
+                  ))}
                 </select>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       {/* Render Task Columns here */}
       <div className="w-full flex-1 flex overflow-x-auto p-4 justify-center flex-wrap">
         {(Object.keys(showTasks) as TaskStatus[]).map((key) => {
@@ -213,24 +266,9 @@ export default function ToDoPage() {
       {/* //Display trash can */}
       <div
         className={`w-28 h-28 rounded-full absolute right-4 bottom-4 ${isDragOver ? 'bg-red-200/80' : ''}`}
-        onDragOver={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsDragOver(true);
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsDragOver(false);
-        }}
-        onDrop={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const data = JSON.parse(queryClient.getQueryData(['taskDragging']) ?? '');
-          console.log('data được lấy ra:', data, 'id được ghi nhận là: ', data.id);
-          setIsDragOver(false);
-          mutationDeleteTask.mutate(data.id);
-        }}
+        onDragOver={(e) => handleDragOver(e)}
+        onDragLeave={(e) => handleDragLeave(e)}
+        onDrop={(e) => handleDrop(e)}
       >
         <div
           className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 ${isDragOver ? '' : 'bg-white/75'} rounded-full pointer-events-none`}
