@@ -6,9 +6,16 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { getProfileApi, logoutApi } from '@api/authAPI';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
+import BurgerIcon from '@assets/icons/burger-menu.svg?react';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+
+const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
+  const [openMenu, setOpenMenu] = useState(false);
+
   const { data: userName } = useQuery({
     queryKey: ['userName'],
     queryFn: async () =>
@@ -35,12 +42,12 @@ export default function HeaderComponent() {
   // console.log('userName header là: ', userName);
 
   return (
-    <div className="sticky top-0 flex justify-around items-center bg-white h-24 sm:h-18 flex-wrap">
+    <div className="sticky top-0 flex justify-around items-center bg-white h-24 sm:h-18 flex-wrap px-12 sm:px-0">
       <div className="flex items-center hover:cursor-pointer" onClick={() => navigate({ to: '/' })}>
         <img className="h-10 w-fit object-cover" src={LogoIcon} alt="img LogoIcon" />
         <img className="h-10 w-fit object-cover" src={LogoText} alt=" img logoText" />
       </div>
-      <nav className="hidden lg:flex gap-4 [&>*]:font-semibold [&>*]:hover:underline [&>*]:hover:text-blue-400 ">
+      <nav className="hidden sm:flex gap-4 [&>*]:font-semibold [&>*]:hover:underline [&>*]:hover:text-blue-400 ">
         <Link to="/">Home</Link>
         <Link to="/todo">To Do List</Link>
         <Link to="/about">About</Link>
@@ -89,6 +96,41 @@ export default function HeaderComponent() {
           />
         </div>
       )}
+      <BurgerIcon
+        className="absolute right-0 w-12 h-12 sm:hidden hover:cursor-pointer"
+        onClick={() => setOpenMenu(true)}
+      />
+      {openMenu && <ModalMenu propOpenModalMenu={setOpenMenu} />}
     </div>
   );
+}
+
+function ModalMenu({ propOpenModalMenu }: { propOpenModalMenu: (value: boolean) => void }) {
+  const modalContent = (
+    <div
+      className="absolute top-0 right-0 h-screen w-screen bg-gray-300/40"
+      onClick={() => propOpenModalMenu(false)}
+    >
+      <div
+        className="absolute right-0 top-12 sm:top-9 h-fit w-1/2 max-w-xs bg-white shadow-lg p-6 flex flex-col gap-4 rounded-l-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <nav className="flex flex-col gap-4 font-semibold [&>*]:p-2 [&>*]:hover:text-blue-400 [&>*]:hover:underline">
+          <Link to="/" onClick={() => propOpenModalMenu(false)}>
+            Home
+          </Link>
+          <Link to="/todo" onClick={() => propOpenModalMenu(false)}>
+            To Do List
+          </Link>
+          <Link to="/about" onClick={() => propOpenModalMenu(false)}>
+            About
+          </Link>
+          <Link to="/test" onClick={() => propOpenModalMenu(false)}>
+            Test
+          </Link>
+        </nav>
+      </div>
+    </div>
+  );
+  return createPortal(modalContent, modalRoot);
 }

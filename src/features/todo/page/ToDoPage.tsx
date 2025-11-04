@@ -148,7 +148,7 @@ export default function ToDoPage() {
             <option value="history">History Tasks</option>
           </select>
         </div>
-        <div className="relative bg-white rounded-full w-12 h-12 hover:cursor-pointer md:hidden">
+        <div className="relative bg-white rounded-full w-12 h-12 hover:cursor-pointer md:hidden hover:bg-gray-300/500 hover:scale-110 hover:shadow-2xl transition-all duration-500">
           <IconFilter
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10"
             onClick={() => setOpenFilter(true)}
@@ -209,7 +209,8 @@ export default function ToDoPage() {
           );
         })}
       </div>
-      //Display trash can
+
+      {/* //Display trash can */}
       <div
         className={`w-28 h-28 rounded-full absolute right-4 bottom-4 ${isDragOver ? 'bg-red-200/80' : ''}`}
         onDragOver={(e) => {
