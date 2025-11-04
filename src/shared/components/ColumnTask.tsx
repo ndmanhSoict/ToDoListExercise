@@ -39,7 +39,7 @@ export default function ColumnTask({
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
         e.preventDefault();
-        const data = JSON.parse(e.dataTransfer.getData('task'));
+        const data = JSON.parse(queryClient.getQueryData(['taskDragging']) ?? '');
         // console.log('Đã thả phần tử:', data, 'vào cột', header);
         const {
           createdById: _createdById,

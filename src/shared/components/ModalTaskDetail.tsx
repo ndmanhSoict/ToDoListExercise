@@ -115,7 +115,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
       onClick={() => closeModalTaskDetail()}
     >
       <div
-        className="absolute w-216 h-140 px-6 py-4 top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-white rounded-xl flex flex-col"
+        className="absolute w-3/4 h-fit max-h-3/4 px-6 py-4 top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-white rounded-xl flex flex-col overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between mb-2 items-center">
@@ -127,8 +127,8 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
           />
         </div>
         <hr className="mb-4"></hr>
-        <div className="flex-1 flex gap-2 ">
-          <div className="flex-3 border-r-2 border-gray-300 pr-4 flex flex-col">
+        <div className="flex-1 flex gap-2 flex-col md:flex-row">
+          <div className="flex-3 md:border-r-2 border-gray-300 md:pr-4 flex flex-col">
             <div className="relative text-2xl">
               <input
                 className="w-full text-inherit pr-8 !leading-none border-2 border-gray-500/5 hover:border-gray-500/50 rounded-md"
@@ -142,7 +142,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                 className="absolute top-1/2 right-0.5 transform -translate-y-1/2 leading-none"
               />
             </div>
-            <div className="flex justify-start gap-8 my-4 [&>*]:text-black [&>*]:border-1 [&>*]:border-black/40 [&>*]:rounded-sm [&>*]:p-2 [&>*]:hover:bg-gray-300/25">
+            <div className="flex justify-start gap-2 sm:gap-8 my-4 [&>*]:text-black [&>*]:border-1 [&>*]:border-black/40 [&>*]:rounded-sm [&>*]:p-2 [&>*]:hover:bg-gray-300/25">
               {checkEditting() ? (
                 <ButtonBasic
                   title="Editting..."
@@ -207,19 +207,21 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
 
             {edit || checkEditting() ? (
               <textarea
-                className="block w-full flex-1 border-2 border-gray-500/5 hover:border-gray-500/50 rounded-md !leading-none p-2"
+                className="block w-full !min-h-[100px] flex-1 border-2 border-gray-500/5 hover:border-gray-500/50 rounded-md !leading-none p-2"
                 value={description}
                 onChange={(e) => {
                   setDescription(e.target.value);
                 }}
               ></textarea>
             ) : (
-              <pre className="block w-full flex-1 p-2 !font-[inherit]">{description}</pre>
+              <pre className="block w-full !min-h-[100px] flex-1 p-2 !font-[inherit]">
+                {description}
+              </pre>
             )}
           </div>
 
           <div
-            className={`flex-2 flex flex-col gap-2 px-2 pt-1 items-start ${edit || checkEditting() ? 'justify-between' : 'justify-evenly'}`}
+            className={`flex-2 flex flex-col gap-2 px-2 pt-1 items-start ${edit || checkEditting() ? 'justify-between' : 'justify-evenly gap-8'}`}
           >
             {edit || checkEditting() ? (
               <>
@@ -285,11 +287,11 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
             {edit || checkEditting() ? (
               <>
                 <label className="block">Start date :</label>
-                <div className="flex w-full justify-between">
+                <div className="w-full flex gap-4 justify-between flex-col md:flex-row sm:flex-row">
                   <input
                     type="date"
                     defaultValue={startDate}
-                    className="border border-gray-300 rounded-md p-2 w-fit"
+                    className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
                       console.log('giá trị mới được ghi nhận', e.target.value);
                       setStartDate(e.target.value);
@@ -298,7 +300,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                   <input
                     type="time"
                     defaultValue={startTime}
-                    className="border border-gray-300 rounded-md p-2 w-fit"
+                    className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
                       console.log('giá trị mới được ghi nhận', e.target.value);
                       setStartTime(`${e.target.value}:00`);
@@ -314,11 +316,11 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
             {edit || checkEditting() ? (
               <>
                 <label className="mt-1 block">End date :</label>
-                <div className="flex w-full justify-between">
+                <div className="w-full flex gap-4 justify-between flex-col md:flex-row sm:flex-row">
                   <input
                     type="date"
                     defaultValue={endDate}
-                    className="border border-gray-300 rounded-md p-2 w-fit"
+                    className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
                       console.log('giá trị mới được ghi nhận', e.target.value);
                       setEndDate(e.target.value);
@@ -327,7 +329,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                   <input
                     type="time"
                     defaultValue={endTime}
-                    className="border border-gray-300 rounded-md p-2 w-fit"
+                    className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
                       console.log('giá trị mới được ghi nhận', e.target.value);
                       setEndTime(`${e.target.value}:00`);

@@ -35,18 +35,18 @@ export default function HeaderComponent() {
   // console.log('userName header là: ', userName);
 
   return (
-    <div className="sticky top-0 flex justify-around items-center bg-white h-18">
+    <div className="sticky top-0 flex justify-around items-center bg-white h-24 sm:h-18 flex-wrap">
       <div className="flex items-center hover:cursor-pointer" onClick={() => navigate({ to: '/' })}>
         <img className="h-10 w-fit object-cover" src={LogoIcon} alt="img LogoIcon" />
         <img className="h-10 w-fit object-cover" src={LogoText} alt=" img logoText" />
       </div>
-      <nav className="flex gap-4 [&>*]:font-semibold [&>*]:hover:underline [&>*]:hover:text-blue-400">
+      <nav className="hidden lg:flex gap-4 [&>*]:font-semibold [&>*]:hover:underline [&>*]:hover:text-blue-400 ">
         <Link to="/">Home</Link>
         <Link to="/todo">To Do List</Link>
         <Link to="/about">About</Link>
         <Link to="/test">Test</Link>
       </nav>
-      <label className="relative inline-flex items-center cursor-pointer">
+      <label className="relative hidden md:inline-flex items-center cursor-pointer">
         <input type="checkbox" className="sr-only peer" />
         <div
           className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full 

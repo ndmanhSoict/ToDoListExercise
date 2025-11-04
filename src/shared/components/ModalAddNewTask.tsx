@@ -59,7 +59,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
       }}
     >
       <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-200 h-fit bg-white  rounded-2xl py-3 px-4"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-fit max-h-3/4 bg-white  rounded-2xl py-3 px-4 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="relative text-xl p-2 block text-center mb-4 font-bold">
@@ -72,8 +72,8 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
         </p>
         <hr className="my-4 mb-2" />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex gap-4">
-            <div className="basis-2/3 grow">
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="md:basis-2/3 md:grow">
               <label className="block">Title:</label>
               <input
                 type="text"
@@ -108,7 +108,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 {errors.assignee ? errors.assignee.message : ' '}
               </pre>
             </div>
-            <div className="basis-1/3 grow">
+            <div className="md:basis-1/3 md:grow">
               <label className="block">Status:</label>
               <select
                 {...register('status')}
@@ -145,7 +145,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 {errors.priority ? errors.priority.message : ' '}
               </pre>
               <label className="block">Start date :</label>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-col md:flex-row sm:flex-row">
                 <input
                   {...register('startDate')}
                   type="date"
@@ -162,7 +162,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 {errors.startDate ? errors.startDate.message : ' '}
               </pre>
               <label className="mt-1 block">End date :</label>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-col md:flex-row sm:flex-row">
                 <input
                   {...register('endDate')}
                   type="date"

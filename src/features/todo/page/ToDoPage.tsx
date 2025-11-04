@@ -116,14 +116,14 @@ export default function ToDoPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4.5rem)]">
-      <div className="h-fit w-fit mt-2 mx-auto flex gap-6">
+      <div className="h-fit w-fit mt-2 mx-auto flex gap-6 z-1000">
         <button
           className="rounded-2xl bg-gray-100 shadow-xl px-4 py-2 hover:scale-110 hover:bg-gray-200 hover:shadow-2xl duration-200 transition-all"
           onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
         >
           + Add New Task
         </button>
-        <div className="rounded-2xl bg-white px-4 py-2">
+        <div className="rounded-2xl bg-white px-4 py-2 hidden sm:block">
           <FontAwesomeIcon icon={faSortAmountDown} color="black" />
           <label>Sort by: </label>
           <select defaultValue={sortBy} onChange={(e) => setSortBy(e.target.value)}>
@@ -137,7 +137,7 @@ export default function ToDoPage() {
             <option value="name-desc">Name (Z to A)</option>
           </select>
         </div>
-        <div className="rounded-2xl bg-white px-4 py-2">
+        <div className="rounded-2xl bg-white px-4 py-2 hidden md:block">
           <label>Show: </label>
           <select defaultValue={showTask} onChange={(e) => setShowTask(e.target.value)}>
             <option value="all">All Tasks</option>
@@ -147,7 +147,7 @@ export default function ToDoPage() {
           </select>
         </div>
       </div>
-      <div className="w-full flex-1 flex overflow-x-auto p-4">
+      <div className="w-full flex-1 flex overflow-x-auto p-4 justify-center flex-wrap">
         {(Object.keys(showTasks) as TaskStatus[]).map((key) => {
           return (
             <ColumnTask
@@ -160,7 +160,7 @@ export default function ToDoPage() {
         })}
       </div>
       <div
-        className={`w-28 h-28 rounded-full absolute right-5 bottom-5 ${isDragOver ? 'bg-red-200/80' : ''}`}
+        className={`w-28 h-28 rounded-full absolute right-4 bottom-4 ${isDragOver ? 'bg-red-200/80' : ''}`}
         onDragOver={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -174,8 +174,8 @@ export default function ToDoPage() {
         onDrop={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          const data = JSON.parse(e.dataTransfer.getData('task'));
-          console.log('Đã thả phần tử:', data);
+          const data = JSON.parse(queryClient.getQueryData(['taskDragging']) ?? '');
+          console.log('data được lấy ra:', data, 'id được ghi nhận là: ', data.id);
           setIsDragOver(false);
           mutationDeleteTask.mutate(data.id);
         }}
@@ -183,11 +183,6 @@ export default function ToDoPage() {
         <div
           className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 ${isDragOver ? '' : 'bg-white/75'} rounded-full pointer-events-none`}
         >
-          {/* {isDragOver ? (
-            <IconOpenTrashCan className="w-16 h-16 text-red-600 transition-all duration-200 pointer-events-none" />
-          ) : (
-            <IconTrashCan className="w-10 h-10 text-gray-600 hover:scale-110 transition-all duration-200 pointer-events-none" />
-          )} */}
           {isDragOver ? (
             <IconOpenTrashCan className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-15 h-15 text-red-600 pointer-events-none" />
           ) : (
