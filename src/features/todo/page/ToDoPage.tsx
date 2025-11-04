@@ -4,19 +4,21 @@ import type { TaskStatus } from '@shared/type/TypeTask';
 import { deleteTodoApi, getAllTodosApi } from '../api/todoAPI';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortAmountDown } from '@fortawesome/free-solid-svg-icons';
+import { faSortAmountDown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useMemo, useState } from 'react';
 import IconTrashCan from '@assets/icons/trash-can.svg?react';
 import IconOpenTrashCan from '@assets/icons/open-trash-can.svg?react';
 import ModalAddTask from '@shared/components/ModalAddNewTask';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
+import IconFilter from '@assets/icons/filter.svg?react';
 
 export default function ToDoPage() {
   const [sortBy, setSortBy] = useState('created-asc');
   const [showTask, setShowTask] = useState('all');
   const [isDragOver, setIsDragOver] = useState(false);
   const [openModalAddNewTask, setOpenModalAddNewTask] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false);
 
   function CloseModal() {
     setOpenModalAddNewTask(false);
@@ -146,7 +148,55 @@ export default function ToDoPage() {
             <option value="history">History Tasks</option>
           </select>
         </div>
+        <div className="relative bg-white rounded-full w-12 h-12 hover:cursor-pointer md:hidden">
+          <IconFilter
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10"
+            onClick={() => setOpenFilter(true)}
+          />
+          <div
+            className={`fixed top-0 right-0 w-screen h-screen bg-gray-300/40 ${openFilter ? 'block' : 'hidden'}`}
+            onClick={() => setOpenFilter(false)}
+          >
+            <div
+              className="absolute h-fit w-fit min-w-2/5 max-w-3/4 right-0 bg-white top-1/4 left-1/2 transform -translate-x-1/2 flex flex-col gap-4 p-4 rounded-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <FontAwesomeIcon
+                icon={faTimes}
+                className="self-end text-2xl text-end hover:cursor-pointer hover:text-red-500 hover:scale-110 hover:shadow-2xl transition-all"
+                onClick={() => setOpenFilter(false)}
+              />
+              <div className="flex justify-between sm:hidden items-center">
+                <label>Sort by: </label>
+                <select
+                  className="max-w-[75%] truncate"
+                  defaultValue={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="created-asc">Creation Date (Oldest to Newest)</option>
+                  <option value="created-desc">Creation Date (Newest to Oldest)</option>
+                  <option value="endDate-asc">End Date (Earliest to Latest)</option>
+                  <option value="endDate-desc">End Date (Latest to Earliest)</option>
+                  <option value="priority-asc">Priority (Low to High)</option>
+                  <option value="priority-desc">Priority (High to Low)</option>
+                  <option value="name-asc">Name (A to Z)</option>
+                  <option value="name-desc">Name (Z to A)</option>
+                </select>
+              </div>
+              <div className="flex justify-between items-center">
+                <label>Show: </label>
+                <select defaultValue={showTask} onChange={(e) => setShowTask(e.target.value)}>
+                  <option value="all">All Tasks</option>
+                  <option value="ongoing">Ongoing Tasks</option>
+                  <option value="upcoming">Upcoming Tasks</option>
+                  <option value="history">History Tasks</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      {/* Render Task Columns here */}
       <div className="w-full flex-1 flex overflow-x-auto p-4 justify-center flex-wrap">
         {(Object.keys(showTasks) as TaskStatus[]).map((key) => {
           return (
@@ -159,6 +209,7 @@ export default function ToDoPage() {
           );
         })}
       </div>
+      //Display trash can
       <div
         className={`w-28 h-28 rounded-full absolute right-4 bottom-4 ${isDragOver ? 'bg-red-200/80' : ''}`}
         onDragOver={(e) => {
