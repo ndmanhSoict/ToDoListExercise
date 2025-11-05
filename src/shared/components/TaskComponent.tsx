@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Task } from '@type/TypeTask';
 import ModalTaskDetail from './ModalTaskDetail';
 import { TaskContext } from '@shared/context/TaskContext';
-import getDayLeft from '@shared/utils/getDayLeft';
+import { getDayLeft } from '@shared/utils/TimeUtils';
 import { queryClient } from '@main';
 
 export default function TaskComponent({ task }: { task: Task }) {

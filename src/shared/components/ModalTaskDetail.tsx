@@ -5,10 +5,12 @@ import { useContext, useState } from 'react';
 import { TaskContext } from '@shared/context/TaskContext';
 import ButtonBasic from './ButtonBasic';
 import { useMutation } from '@tanstack/react-query';
-import { deleteTodoApi, updateTodoApi } from '@features/todo/api/todoAPI';
+import { deleteTodoApi, LIST_USERS, updateTodoApi } from '@features/todo/api/todoAPI';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
 import { createPortal } from 'react-dom';
+import { TASK_PRIORITY, TASK_STATUS } from '@shared/type/TypeTask';
+import { formatDate, formatTime, convertDate } from '@shared/utils/TimeUtils';
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
@@ -28,21 +30,49 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
 
   const getContext = useContext(TaskContext);
 
-  function formatDate(date: string): string {
-    const parts = new Date(date).toLocaleDateString('en-GB').split('/'); // 'en-GB' => dd/mm/yyyy
-    const y = parts[2];
-    const m = parts[1].padStart(2, '0');
-    const d = parts[0].padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
-  function formatTime(date: string): string {
-    return new Date(date).toLocaleTimeString('en-GB');
-  }
-  function convertDate(date?: string, time?: string): string {
-    if (!date || !time) return '';
-    return new Date(`${date}T${time}`).toISOString();
-  }
+  //Declare mutation
+  const mutationSaveEdit = useMutation({
+    mutationFn: async (task: Task) => {
+      const {
+        createdById: _createdById,
+        createdAt: _createdAt,
+        updatedAt: _updatedAt,
+        ...rest
+      } = task;
+      const updatePayload = {
+        ...rest,
+        name: title,
+        description: description,
+        status: status,
+        priority: priority,
+        assignee: assignee,
+        startDate: convertDate(startDate, startTime),
+        endDate: convertDate(endDate, endTime),
+      };
+      return await updateTodoApi(updatePayload);
+    },
+    onSuccess: () => {
+      toast.success('Task updated successfully');
+      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
+      getContext?.handleOpenCloseModal();
+    },
+  });
 
+  const mutationDeleteTask = useMutation({
+    mutationFn: async (taskId: string) => {
+      return await deleteTodoApi(taskId);
+    },
+    onSuccess: () => {
+      toast.success('Task deleted successfully');
+      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
+      getContext?.handleOpenCloseModal();
+    },
+    onError: (error) => {
+      toast.error('Error deleting task: ' + error.message + '. Please try again.');
+    },
+  });
+
+  //Declare funtion in this component
   function checkEditting(): boolean {
     const getStartDateConverted = convertDate(startDate, startTime);
     const getEndDateConverted = convertDate(endDate, endTime);
@@ -66,48 +96,29 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
   function handleOpenModalConfirm() {
     setOpenModalConfirm(!openModalConfirm);
   }
-
-  const mutationSaveEdit = useMutation({
-    mutationFn: async (task: Task) => {
-      const {
-        createdById: _createdById,
-        createdAt: _createdAt,
-        updatedAt: _updatedAt,
-        ...rest
-      } = task;
-      const updatePayload = {
-        ...rest,
-        name: title,
-        description: description,
-        status: status,
-        priority: priority,
-        assignee: assignee,
-        startDate: convertDate(startDate, startTime),
-        endDate: convertDate(endDate, endTime),
-      };
-      // console.log('Updating task with payload:', updatePayload);
-      return await updateTodoApi(updatePayload);
-    },
-    onSuccess: () => {
-      toast.success('Task updated successfully');
-      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
-      getContext?.handleOpenCloseModal();
-    },
-  });
-
-  const mutationDeleteTask = useMutation({
-    mutationFn: async (taskId: string) => {
-      return await deleteTodoApi(taskId);
-    },
-    onSuccess: () => {
-      toast.success('Task deleted successfully');
-      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
-      getContext?.handleOpenCloseModal();
-    },
-    onError: (error) => {
-      toast.error('Error deleting task: ' + error.message + '. Please try again.');
-    },
-  });
+  function handleSave() {
+    if (title === '') {
+      toast.error('Task name is required');
+      return;
+    }
+    if (convertDate(startDate, startTime) >= convertDate(endDate, endTime)) {
+      toast.error('Time is invalid');
+      return;
+    }
+    mutationSaveEdit.mutate(task);
+  }
+  function handleReset() {
+    setEdit(false);
+    setDescription(task.description);
+    setTitle(task.name);
+    setStatus(task.status);
+    setPriority(task.priority);
+    setAssignee(task.assignee);
+    setStartDate(formatDate(task.startDate));
+    setStartTime(formatTime(task.startDate));
+    setEndDate(formatDate(task.endDate));
+    setEndTime(formatTime(task.endDate));
+  }
 
   const modalContent = (
     <div
@@ -169,17 +180,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                     ? 'bg-gray-400/50 !cursor-not-allowed disabled:hover:bg-gray-400/50'
                     : ''
                 }
-                onClick={() => {
-                  if (title === '') {
-                    toast.error('Task name is required');
-                    return;
-                  }
-                  if (convertDate(startDate, startTime) >= convertDate(endDate, endTime)) {
-                    toast.error('Time is invalid');
-                    return;
-                  }
-                  mutationSaveEdit.mutate(task);
-                }}
+                onClick={() => handleSave()}
               ></ButtonBasic>
               <ButtonBasic
                 title="Reset"
@@ -189,18 +190,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                     ? 'bg-gray-400/50 !cursor-not-allowed disabled:hover:bg-gray-400/50'
                     : ''
                 }
-                onClick={() => {
-                  setEdit(false);
-                  setDescription(task.description);
-                  setTitle(task.name);
-                  setStatus(task.status);
-                  setPriority(task.priority);
-                  setAssignee(task.assignee);
-                  setStartDate(formatDate(task.startDate));
-                  setStartTime(formatTime(task.startDate));
-                  setEndDate(formatDate(task.endDate));
-                  setEndTime(formatTime(task.endDate));
-                }}
+                onClick={() => handleReset()}
               ></ButtonBasic>
             </div>
             <span className="text-sm">Description</span>
@@ -233,12 +223,9 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                   <option value={status} disabled selected hidden>
                     {status}
                   </option>
-                  <option value={'TODO'}>TODO</option>
-                  <option value={'IN_PROGRESS'}>IN_PROGRESS</option>
-                  <option value={'IN_REVIEW'}>IN_REVIEW</option>
-                  <option value={'IN_DEPLOYMENT'}>IN_DEPLOYMENT</option>
-                  <option value={'IN_TESTING'}>IN_TESTING</option>
-                  <option value={'DONE'}>DONE</option>
+                  {TASK_STATUS.map((status) => (
+                    <option value={status}>{status}</option>
+                  ))}
                 </select>
               </>
             ) : (
@@ -254,11 +241,9 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                   <option value={priority} disabled selected hidden>
                     {priority}
                   </option>
-                  <option value={'LOW'}>LOW</option>
-                  <option value={'MEDIUM'}>MEDIUM</option>
-                  <option value={'HIGH'}>HIGH</option>
-                  <option value={'HIGHEST'}>HIGHEST</option>
-                  <option value={'URGENT'}>URGENT</option>
+                  {TASK_PRIORITY.map((priority) => (
+                    <option value={priority}>{priority}</option>
+                  ))}
                 </select>
               </>
             ) : (
@@ -274,11 +259,9 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                   <option value={assignee} disabled selected hidden>
                     {assignee}
                   </option>
-                  <option value={'Tran Thi Tra Dang'}>Tran Thi Tra Dang</option>
-                  <option value={'Pham Huy Hoang'}>Pham Huy Hoang</option>
-                  <option value={'Nguyen Duc Manh'}>Nguyen Duc Manh</option>
-                  <option value={'Nguyen Van Nam'}>Nguyen Van Nam</option>
-                  <option value={'Le Anh Tuan'}>Le Anh Tuan</option>
+                  {LIST_USERS.map((user) => (
+                    <option value={user}>{user}</option>
+                  ))}
                 </select>
               </>
             ) : (
@@ -293,7 +276,6 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                     defaultValue={startDate}
                     className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
-                      console.log('giá trị mới được ghi nhận', e.target.value);
                       setStartDate(e.target.value);
                     }}
                   />
@@ -302,7 +284,6 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                     defaultValue={startTime}
                     className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
-                      console.log('giá trị mới được ghi nhận', e.target.value);
                       setStartTime(`${e.target.value}:00`);
                     }}
                   />
@@ -322,7 +303,6 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                     defaultValue={endDate}
                     className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
-                      console.log('giá trị mới được ghi nhận', e.target.value);
                       setEndDate(e.target.value);
                     }}
                   />
@@ -331,7 +311,6 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                     defaultValue={endTime}
                     className="border border-gray-300 rounded-md p-2 w-full"
                     onChange={(e) => {
-                      console.log('giá trị mới được ghi nhận', e.target.value);
                       setEndTime(`${e.target.value}:00`);
                     }}
                   />

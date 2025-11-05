@@ -54,3 +54,11 @@ async function deleteTodoApi(id: string) {
   return response.data.data;
 }
 export { getTodosApi, createNewTodoApi, updateTodoApi, deleteTodoApi, getAllTodosApi };
+
+export const LIST_USERS = [
+  'Tran Thi Tra Dang',
+  'Pham Huy Hoang',
+  'Nguyen Duc Manh',
+  'Nguyen Van Nam',
+  'Le Anh Tuan',
+];

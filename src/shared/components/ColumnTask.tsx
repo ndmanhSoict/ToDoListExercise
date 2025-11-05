@@ -11,19 +11,17 @@ export default function ColumnTask({
   header,
   count,
   proptaskList,
-  // onDropEvent,
 }: {
   header: TaskStatus;
   count: number;
   proptaskList: Task[];
-  // onDropEvent: (taskId: string, fromColumn: TaskStatus, toColumn: TaskStatus) => void;
 }) {
   const mutationDropTask = useMutation({
     mutationFn: async (newPayloadAPI: Omit<Task, 'createdById' | 'createdAt' | 'updatedAt'>) => {
       return await updateTodoApi(newPayloadAPI);
     },
     onSuccess: () => {
-      console.log('Cập nhật trạng thái task thành công');
+      // console.log('Cập nhật trạng thái task thành công');
       queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
     },
     onError: (error) => {

@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import BurgerIcon from '@assets/icons/burger-menu.svg?react';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { LIST_PAGES } from '@shared/constants/PageConstants';
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
@@ -38,8 +39,6 @@ export default function HeaderComponent() {
       navigate({ to: '/' });
     },
   });
-  // const userName = queryClient.getQueryData<string>(['userName']);
-  // console.log('userName header là: ', userName);
 
   return (
     <div className="sticky top-0 flex justify-around items-center bg-white h-24 sm:h-18 flex-wrap px-12 sm:px-0">
@@ -48,10 +47,9 @@ export default function HeaderComponent() {
         <img className="h-10 w-fit object-cover" src={LogoText} alt=" img logoText" />
       </div>
       <nav className="hidden sm:flex gap-4 [&>*]:font-semibold [&>*]:hover:underline [&>*]:hover:text-blue-400 ">
-        <Link to="/">Home</Link>
-        <Link to="/todo">To Do List</Link>
-        <Link to="/about">About</Link>
-        <Link to="/test">Test</Link>
+        {LIST_PAGES.map((obj) => (
+          <Link to={obj.value}>{obj.name}</Link>
+        ))}
       </nav>
       <label className="relative hidden md:inline-flex items-center cursor-pointer">
         <input type="checkbox" className="sr-only peer" />
@@ -116,18 +114,11 @@ function ModalMenu({ propOpenModalMenu }: { propOpenModalMenu: (value: boolean) 
         onClick={(e) => e.stopPropagation()}
       >
         <nav className="flex flex-col gap-4 font-semibold [&>*]:p-2 [&>*]:hover:text-blue-400 [&>*]:hover:underline">
-          <Link to="/" onClick={() => propOpenModalMenu(false)}>
-            Home
-          </Link>
-          <Link to="/todo" onClick={() => propOpenModalMenu(false)}>
-            To Do List
-          </Link>
-          <Link to="/about" onClick={() => propOpenModalMenu(false)}>
-            About
-          </Link>
-          <Link to="/test" onClick={() => propOpenModalMenu(false)}>
-            Test
-          </Link>
+          {LIST_PAGES.map((obj) => (
+            <Link to={obj.value} onClick={() => propOpenModalMenu(false)}>
+              {obj.name}
+            </Link>
+          ))}
         </nav>
       </div>
     </div>

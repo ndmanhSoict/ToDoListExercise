@@ -3,8 +3,8 @@ import LoginPage from '@features/auth/page/LoginPage';
 import { queryClient } from '@main';
 
 export const Route = createFileRoute('/login')({
-  beforeLoad: () => {
-    const user = queryClient.getQueryData<{ userName: string }>(['userName']);
+  beforeLoad: async () => {
+    const user = await queryClient.getQueryData<{ userName: string }>(['userName']);
     if (user) {
       throw redirect({ to: '/todo' });
     }

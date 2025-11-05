@@ -10,6 +10,9 @@ import { queryClient } from '@main';
 import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
 import { createPortal } from 'react-dom';
+import { TASK_PRIORITY, TASK_STATUS } from '@shared/type/TypeTask';
+import { LIST_USERS } from '@features/todo/api/todoAPI';
+import { convertDate } from '@shared/utils/TimeUtils';
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
@@ -22,9 +25,6 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
     resolver: zodResolver(todoSchema),
   });
 
-  function convertDate(date: string, time: string): string {
-    return new Date(`${date}T${time}:00`).toISOString();
-  }
   const mutationAddNewTask = useMutation({
     mutationFn: async (newTask: TodoSchema) => {
       const taskToCreate = {
@@ -48,9 +48,11 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
       }
     },
   });
+
   const onSubmit = (data: TodoSchema) => {
     mutationAddNewTask.mutate(data);
   };
+
   const modalContent = (
     <div
       className="absolute top-0 left-0 w-screen h-screen bg-gray-300/40"
@@ -58,8 +60,9 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
         e.stopPropagation();
       }}
     >
+      {/* //Main content */}
       <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-fit max-h-3/4 bg-white  rounded-2xl py-3 px-4 overflow-y-auto"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-9/10 sm:w-3/5 h-fit max-h-3/4 bg-white  rounded-2xl py-3 px-4 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="relative text-xl p-2 block text-center mb-4 font-bold">
@@ -71,6 +74,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
           />
         </p>
         <hr className="my-4 mb-2" />
+        {/* //Form input data */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-4 md:flex-row">
             <div className="md:basis-2/3 md:grow">
@@ -98,11 +102,9 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 <option value="" disabled selected hidden>
                   -- Select Assignee --
                 </option>
-                <option value={'Tran Thi Tra Dang'}>Tran Thi Tra Dang</option>
-                <option value={'Pham Huy Hoang'}>Pham Huy Hoang</option>
-                <option value={'Nguyen Duc Manh'}>Nguyen Duc Manh</option>
-                <option value={'Nguyen Van Nam'}>Nguyen Van Nam</option>
-                <option value={'Le Anh Tuan'}>Le Anh Tuan</option>
+                {LIST_USERS.map((user) => (
+                  <option value={user}>{user}</option>
+                ))}
               </select>
               <pre className="text-red-500 text-sm">
                 {errors.assignee ? errors.assignee.message : ' '}
@@ -117,12 +119,9 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 <option value="" disabled selected hidden>
                   -- Select Status --
                 </option>
-                <option value={'TODO'}>TODO</option>
-                <option value={'IN_PROGRESS'}>IN_PROGRESS</option>
-                <option value={'IN_REVIEW'}>IN_REVIEW</option>
-                <option value={'IN_DEPLOYMENT'}>IN_DEPLOYMENT</option>
-                <option value={'IN_TESTING'}>IN_TESTING</option>
-                <option value={'DONE'}>DONE</option>
+                {TASK_STATUS.map((status) => (
+                  <option value={status}>{status}</option>
+                ))}
               </select>
               <pre className="text-red-500 text-sm">
                 {errors.status ? errors.status.message : ' '}
@@ -135,11 +134,9 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
                 <option value="" disabled selected hidden>
                   -- Select Priority --
                 </option>
-                <option value={'LOW'}>LOW</option>
-                <option value={'MEDIUM'}>MEDIUM</option>
-                <option value={'HIGH'}>HIGH</option>
-                <option value={'HIGHEST'}>HIGHEST</option>
-                <option value={'URGENT'}>URGENT</option>
+                {TASK_PRIORITY.map((priority) => (
+                  <option value={priority}>{priority}</option>
+                ))}
               </select>
               <pre className="text-red-500 text-sm">
                 {errors.priority ? errors.priority.message : ' '}

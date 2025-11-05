@@ -12,31 +12,8 @@ import ModalAddTask from '@shared/components/ModalAddNewTask';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
 import IconFilter from '@assets/icons/filter.svg?react';
-
-//Declare const variable
-const SORTBY_OPTIONS = [
-  { value: 'created-asc', label: 'Creation Date (Oldest to Newest)' },
-  { value: 'created-desc', label: 'Creation Date (Newest to Oldest)' },
-  { value: 'endDate-asc', label: 'End Date (Earliest to Latest)' },
-  { value: 'endDate-desc', label: 'End Date (Latest to Earliest)' },
-  { value: 'priority-asc', label: 'Priority (Low to High)' },
-  { value: 'priority-desc', label: 'Priority (High to Low)' },
-  { value: 'name-asc', label: 'Name (A to Z)' },
-  { value: 'name-desc', label: 'Name (Z to A)' },
-];
-const SHOW_TASK_OPTIONS = [
-  { value: 'all', label: 'All Tasks' },
-  { value: 'ongoing', label: 'Ongoing Tasks' },
-  { value: 'upcoming', label: 'Upcoming Tasks' },
-  { value: 'history', label: 'History Tasks' },
-];
-const PRIORITY_RANK: Record<string, number> = {
-  LOW: 1,
-  MEDIUM: 2,
-  HIGH: 3,
-  HIGHEST: 4,
-  URGENT: 5,
-};
+import { SHOW_TASK_OPTIONS, SORTBY_OPTIONS } from '@shared/constants/TodoConstants';
+import { sortPriority, sortStr, sortTime } from '@shared/utils/SortUtils';
 
 const createEmptyTaskMap = (): Record<TaskStatus, Task[]> => {
   return {
@@ -103,12 +80,16 @@ export default function ToDoPage() {
         const end = new Date(task.endDate).getTime();
         const now = Date.now();
         switch (showTask) {
+          //all
           case SHOW_TASK_OPTIONS[0].value:
             return true;
+          //ongoing
           case SHOW_TASK_OPTIONS[1].value:
             return start <= now && now <= end;
+          //upcoming
           case SHOW_TASK_OPTIONS[2].value:
             return start > now;
+          //history
           case SHOW_TASK_OPTIONS[3].value:
             return end < now;
           default:
@@ -116,28 +97,15 @@ export default function ToDoPage() {
         }
       });
       filterTask[status].sort((a: Task, b: Task) => {
-        //Declare some type functions
-        const sortTime = (a: string, b: string) => {
-          if (sortType === 'asc') return new Date(a).getTime() - new Date(b).getTime();
-          return new Date(b).getTime() - new Date(a).getTime();
-        };
-        const sortStr = (a: string, b: string) => {
-          if (sortType === 'asc') return a.localeCompare(b);
-          return b.localeCompare(a);
-        };
-        const sortPriority = (a: string, b: string) => {
-          if (sortType === 'asc') return PRIORITY_RANK[a] - PRIORITY_RANK[b];
-          return PRIORITY_RANK[b] - PRIORITY_RANK[a];
-        };
         switch (sortField) {
           case 'created':
-            return sortTime(a.createdAt, b.createdAt);
+            return sortTime(a.createdAt, b.createdAt, sortType);
           case 'endDate':
-            return sortTime(a.endDate, b.endDate);
+            return sortTime(a.endDate, b.endDate, sortType);
           case 'priority':
-            return sortPriority(a.priority, b.priority);
+            return sortPriority(a.priority, b.priority, sortType);
           case 'name':
-            return sortStr(a.name, b.name);
+            return sortStr(a.name, b.name, sortType);
           default:
             return 0;
         }
@@ -165,7 +133,7 @@ export default function ToDoPage() {
     event.stopPropagation();
     const cached = queryClient.getQueryData(['taskDragging']);
     if (!cached || typeof cached !== 'string') {
-      toast.error('Your request is not valid. Please try again!');
+      toast.error('Your request is invalid. Please try again!');
       return;
     }
     const data = JSON.parse(cached);
