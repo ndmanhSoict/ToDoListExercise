@@ -43,6 +43,30 @@ persistQueryClient({
   maxAge: 1000 * 60 * 5, // thời gian tối đa cache tồn tại
 });
 
+export function setTheme(theme?: 'light' | 'dark') {
+  const body = document.querySelector('body');
+  if (!body) return;
+
+  // Nếu không truyền theme -> đọc từ localStorage hoặc hệ thống
+  if (!theme) {
+    const saved = localStorage.getItem('theme');
+    if (saved) theme = saved as 'light' | 'dark';
+    else theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  // Cập nhật class
+  if (theme === 'dark') {
+    body.classList.add('dark');
+    body.classList.remove('light');
+  } else {
+    body.classList.add('light');
+    body.classList.remove('dark');
+  }
+
+  // Lưu lại theme hiện tại
+  localStorage.setItem('theme', theme);
+}
+
 const rootElement = document.getElementById('root')!;
 if (!rootElement.innerHTML) {
   ReactDOM.createRoot(rootElement).render(
