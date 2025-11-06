@@ -25,6 +25,7 @@
 }
 
 .light {
+  --bg-image-url: url('./assets/images/bg.png');
   --color-bg: #f9fafb;
   /* nền tổng thể */
   --color-surface: #ffffff;
@@ -74,11 +75,12 @@
 }
 
 .dark {
+  --color-bg-root: #334155;
   --color-bg: #0f172a;
   /* nền tổng thể */
   --color-surface: #1e293b;
   /* card/panel */
-  --color-surface-hover: #334155;
+  --color-surface-hover: #3c4a5e;
   /* hover nhẹ */
   --color-border: #475569;
   /* viền mờ */
@@ -101,9 +103,9 @@
 
   --task-overdue-bg: #1e293b;
   /* slate-800 */
-  --task-soon-bg: #7f1d1d;
+  --task-soon-bg: #ce4040;
   /* red-900/60 */
-  --task-medium-bg: #78350f;
+  --task-medium-bg: #ddce57;
   /* yellow-900/50 */
   --task-safe-bg: #14532d;
   /* green-900/40 */
@@ -118,6 +120,6 @@
   /* yellow-400 */
   --task-border-highest: #fb923c;
   /* orange-400 */
-  --task-border-urgent: #f87171;
+  --task-border-urgent: #b31d1d;
   /* red-400 */
 }

@@ -62,7 +62,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
     >
       {/* //Main content */}
       <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-9/10 sm:w-3/5 h-fit max-h-3/4 bg-white  rounded-2xl py-3 px-4 overflow-y-auto"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-9/10 sm:w-3/5 h-fit max-h-3/4 bg-[var(--color-surface)] text-[var(--color-text)]  rounded-2xl py-3 px-4 overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="relative text-xl p-2 block text-center mb-4 font-bold">
@@ -180,7 +180,7 @@ function ModalAddTask({ propCloseModal }: { propCloseModal: () => void }) {
           <div className="mt-4 flex justify-center">
             <ButtonBasic
               title={mutationAddNewTask.isPending ? 'Adding...' : 'Add Task'}
-              className="px-6 py-4 bg-blue-500 text-white hover:bg-blue-700 shadow"
+              className="px-6 py-4 bg-[var(--color-info)] text-white hover:bg-blue-700 shadow"
               type="submit"
             />
           </div>

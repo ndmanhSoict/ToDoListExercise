@@ -48,18 +48,18 @@ export default function ColumnTask({
         const newPayloadAPI = { ...payloadAPI, status: header };
         mutationDropTask.mutate(newPayloadAPI);
       }}
-      className="flex flex-col flex-shrink-0 w-52 bg-white shadow m-4 rounded p-1 h-fit hover:bg-gray-50"
+      className="flex flex-col flex-shrink-0 w-52 bg-[var(--color-bg)] shadow m-4 rounded p-1 h-fit hover:bg-[var(--color-surface-hover)]"
     >
-      <div className="flex justify-between items-center px-2 mb-4">
+      <div className="flex justify-between items-center px-2 mb-4 text-[var(--color-text)]">
         <h2 className="font-bold text-base">{header}</h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm">
           {count < 2 ? (count < 1 ? null : `${count} task`) : `${count} tasks`}
         </p>
       </div>
       {count > 0 ? (
         proptaskList.map((task) => <TaskComponent key={task.id} task={task} />)
       ) : (
-        <p className="text-gray-500 italic text-center mb-4">No task in this status</p>
+        <p className="text-[var(--color-text)] italic text-center mb-4">No task in this status</p>
       )}
     </div>
   );

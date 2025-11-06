@@ -54,6 +54,8 @@ export function setTheme(theme?: 'light' | 'dark') {
     else theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
+  body.classList.add('theme-transition');
+
   // Cập nhật class
   if (theme === 'dark') {
     body.classList.add('dark');
@@ -62,6 +64,10 @@ export function setTheme(theme?: 'light' | 'dark') {
     body.classList.add('light');
     body.classList.remove('dark');
   }
+
+  window.setTimeout(() => {
+    body.classList.remove('theme-transition');
+  }, 500); // cùng duration với CSS transition
 
   // Lưu lại theme hiện tại
   localStorage.setItem('theme', theme);

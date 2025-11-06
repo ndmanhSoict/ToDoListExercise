@@ -17,26 +17,26 @@ export default function TaskComponent({ task }: { task: Task }) {
     let bgColr: string = '';
 
     if (dayLeft < 0) {
-      bgColr = 'bg-gray-200 opacity-70';
+      bgColr = 'bg-[var(--task-overdue-bg)] opacity-70';
     } else if (dayLeft < 3) {
       //Còn lại 0 1 2
-      bgColr = 'bg-red-200';
+      bgColr = 'bg-[var(--task-soon-bg)]';
     } else if (dayLeft <= 5) {
       //Còn lại 3 4 5
-      bgColr = 'bg-yellow-100';
+      bgColr = 'bg-[var(--task-medium-bg)]';
     } else if (dayLeft <= 10) {
       //Còn lại 6 -> 10
-      bgColr = 'bg-green-100';
+      bgColr = 'bg-[var(--task-safe-bg)]';
     } else {
-      bgColr = 'bg-blue-100'; //Hơn 10
+      bgColr = 'bg-[var(--task-long-bg)]'; //Hơn 10
     }
 
     const borderLine: Record<string, string> = {
-      LOW: 'border-r-gray-400',
-      MEDIUM: 'border-r-green-500',
-      HIGH: 'border-r-yellow-500',
-      HIGHEST: 'border-r-orange-500',
-      URGENT: 'border-r-red-600',
+      LOW: 'border-r-[var(--task-border-low)]',
+      MEDIUM: 'border-r-[var(--task-border-medium)]',
+      HIGH: 'border-r-[var(--task-border-high)]',
+      HIGHEST: 'border-r-[var(--task-border-highest)]',
+      URGENT: 'border-r-[var(--task-border-urgent)]',
     };
 
     return `${bgColr} border-r-8 ${borderLine[priority]}`;
@@ -55,7 +55,9 @@ export default function TaskComponent({ task }: { task: Task }) {
         onDragEnd={() => queryClient.setQueryData(['onDrag'], false)}
         onClick={() => handleOpenCloseModal()}
       >
-        <h2 className="text-base font-bold break-words whitespace-normal">{task.name}</h2>
+        <h2 className="text-base font-bold break-words whitespace-normal text-[var(--color-text)]">
+          {task.name}
+        </h2>
       </div>
       {openModalDetail && <ModalTaskDetail task={task}></ModalTaskDetail>}
     </TaskContext.Provider>

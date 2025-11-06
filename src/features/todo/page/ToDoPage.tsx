@@ -148,25 +148,35 @@ export default function ToDoPage() {
       <div className="h-fit w-fit mt-2 mx-auto flex gap-6 z-10">
         {/* Button Add new Task */}
         <button
-          className="rounded-2xl bg-gray-100 shadow-xl px-4 py-2 hover:scale-110 hover:bg-gray-200 hover:shadow-2xl duration-200 transition-all"
+          className="rounded-2xl bg-[var(--color-surface)] text-[var(--color-text)] shadow-xl px-4 py-2 hover:scale-110 hover:bg-[var(--color-surface-hover)] hover:shadow-2xl duration-200 transition-all"
           onClick={() => setOpenModalAddNewTask(!openModalAddNewTask)}
         >
           + Add New Task
         </button>
         {/* Select sort */}
-        <div className="rounded-2xl bg-white px-4 py-2 hidden sm:block">
-          <FontAwesomeIcon icon={faSortAmountDown} color="black" />
-          <label>Sort by: </label>
-          <select defaultValue={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+        <div className="rounded-2xl bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] px-4 py-2 hidden sm:block">
+          <FontAwesomeIcon icon={faSortAmountDown} color="var(--color-text)" />
+          <label className="text-[var(--color-text)]">Sort by: </label>
+          <select
+            className="text-[var(--color-text)]"
+            defaultValue={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
             {SORTBY_OPTIONS.map((obj) => (
-              <option value={obj.value}>{obj.label}</option>
+              <option className="text-[var(--color-text)]" value={obj.value}>
+                {obj.label}
+              </option>
             ))}
           </select>
         </div>
         {/* Select show mode */}
-        <div className="rounded-2xl bg-white px-4 py-2 hidden md:block">
-          <label>Show: </label>
-          <select defaultValue={showTask} onChange={(e) => setShowTask(e.target.value)}>
+        <div className="rounded-2xl bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)] px-4 py-2 hidden md:block">
+          <label className="text-[var(--color-text)]">Show: </label>
+          <select
+            className="text-[var(--color-text)]"
+            defaultValue={showTask}
+            onChange={(e) => setShowTask(e.target.value)}
+          >
             {SHOW_TASK_OPTIONS.map((obj) => (
               <option value={obj.value}>{obj.label}</option>
             ))}

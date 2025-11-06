@@ -126,7 +126,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
       onClick={() => closeModalTaskDetail()}
     >
       <div
-        className="absolute w-3/4 h-fit max-h-3/4 px-6 py-4 top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-white rounded-xl flex flex-col overflow-y-auto"
+        className="absolute w-3/4 h-fit max-h-3/4 px-6 py-4 top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 bg-[var(--color-surface)] text-[var(--color-text)] rounded-xl flex flex-col overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between mb-2 items-center">
@@ -153,7 +153,7 @@ export default function ModalTaskDetail({ task }: { task: Task }) {
                 className="absolute top-1/2 right-0.5 transform -translate-y-1/2 leading-none"
               />
             </div>
-            <div className="flex justify-start gap-2 sm:gap-8 my-4 [&>*]:text-black [&>*]:border-1 [&>*]:border-black/40 [&>*]:rounded-sm [&>*]:p-2 [&>*]:hover:bg-gray-300/25">
+            <div className="flex justify-start gap-2 sm:gap-8 my-4 [&>*]:text-[var(--color-text)] [&>*]:border-1 [&>*]:border-black/40 [&>*]:rounded-sm [&>*]:p-2 [&>*]:hover:bg-gray-300/25">
               {checkEditting() ? (
                 <ButtonBasic
                   title="Editting..."
