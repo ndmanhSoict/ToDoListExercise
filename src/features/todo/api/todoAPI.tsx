@@ -20,6 +20,7 @@ async function getTodoStats() {
 async function getAllTodosApi() {
   const getStats = await getTodoStats();
   const result = await getTodosApi({ limit: getStats.stats.total });
+  // console.log(result);
   return result;
 }
 async function createNewTodoApi(body: {

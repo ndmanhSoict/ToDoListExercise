@@ -2,9 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import ButtonBasic from './ButtonBasic';
 import LogoIcon from '@assets/images/logo-icon.png';
 import LogoText from '@assets/images/logo-text.png';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { getProfileApi, logoutApi } from '@api/authAPI';
-import { queryClient, setTheme } from '@main';
+import { setTheme } from '@main';
 import { toast } from 'react-toastify';
 import BurgerIcon from '@assets/icons/burger-menu.svg?react';
 import { useEffect, useState } from 'react';
@@ -12,47 +10,44 @@ import { createPortal } from 'react-dom';
 import { LIST_PAGES } from '@shared/constants/PageConstants';
 import Switch from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { type AppDispatch, type RootState } from '@store/store';
+import { logoutUser, updateUserName } from '@store/userSlice';
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 export default function HeaderComponent() {
   const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState(false);
-
-  const { data: userName } = useQuery({
-    queryKey: ['userName'],
-    queryFn: async () =>
-      await getProfileApi().then((res) =>
-        res.data.data.user.username.slice(0, res.data.data.user.username.indexOf('@')),
-      ),
-    enabled: !!localStorage.getItem('accessToken'),
-    staleTime: 300000, // 5 phút
-  });
-
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      return await logoutApi();
-    },
-    onSuccess: () => {
-      queryClient.setQueryData(['userName'], null);
-      queryClient.clear();
-      localStorage.clear();
-      toast.success('Logged out successfully!');
-      navigate({ to: '/' });
-    },
-  });
-
   const [isDark, setIsDark] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const { userName } = useSelector((state: RootState) => state.user.data);
 
   useEffect(() => {
     const saved = localStorage.getItem('theme');
     setIsDark(saved === 'dark');
   }, []);
 
+  useEffect(() => {
+    dispatch(updateUserName());
+  }, [dispatch]);
+
   const handleToggle = () => {
     const newTheme = isDark ? 'light' : 'dark';
     setIsDark(!isDark);
     setTheme(newTheme);
+  };
+  const handleLogout = () => {
+    dispatch(logoutUser())
+      .unwrap() // unwrap giúp lấy giá trị trả về của promise nếu thành công
+      .then(() => {
+        localStorage.clear();
+        dispatch(updateUserName());
+        navigate({ to: '/' });
+      })
+      .catch((error) => {
+        toast.error('Logout failed: ', error);
+      });
   };
 
   return (
@@ -76,7 +71,7 @@ export default function HeaderComponent() {
             Hi, {userName} !
             <button
               className="underline italic hover:cursor-pointer hover:text-blue-400 pl-2"
-              onClick={() => logoutMutation.mutate()}
+              onClick={handleLogout}
             >
               Logout
             </button>

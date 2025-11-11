@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-// import { Provider } from 'react-redux';
-// import { persistor, store } from './store/store';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer } from 'react-toastify';
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -12,6 +12,8 @@ import './index.css';
 
 // Import route tree được generate tự động
 import { routeTree } from './routeTree.gen';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const router = createRouter({ routeTree });
 
@@ -78,13 +80,15 @@ if (!rootElement.innerHTML) {
   ReactDOM.createRoot(rootElement).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        {/* <Provider store={store}> */}
-        {/* <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}> */}
-        <RouterProvider router={router} />
-        <ToastContainer position="bottom-right" autoClose={2000} />
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        {/* </PersistGate> */}
-        {/* </Provider> */}
+        <Provider store={store}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {/* <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}> */}
+            <RouterProvider router={router} />
+            <ToastContainer position="bottom-right" autoClose={2000} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            {/* </PersistGate> */}
+          </LocalizationProvider>
+        </Provider>
       </QueryClientProvider>
     </StrictMode>,
   );

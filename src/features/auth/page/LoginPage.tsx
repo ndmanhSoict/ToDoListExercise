@@ -5,47 +5,37 @@ import { useForm } from 'react-hook-form';
 import { loginSchema, type LoginSchema } from '@schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { useMutation } from '@tanstack/react-query';
-import { loginApi } from '@api/authAPI';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
-import type { AxiosError } from 'axios';
-import { queryClient } from '@main';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@store/store';
+import { loginUser, updateUserName } from '@store/userSlice';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [hidePassword, setHidePassword] = useState(true);
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.todos);
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
 
-  const mutation = useMutation({
-    mutationFn: async (body: { username: string; password: string }) => {
-      const res = await loginApi(body);
-      return res;
-    },
-    onSuccess: (response) => {
-      // console.log('Login successful:', response.data.data);
-      localStorage.setItem('accessToken', response.data.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.data.refreshToken);
-      const username = response.data.data.user.username;
-      const getUserName = username.slice(0, username.indexOf('@'));
-      queryClient.setQueryData(['userName'], getUserName);
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-      toast.success('Login successful!');
-      navigate({ to: '/todo' });
-    },
-    // onError: (error) => {
-    //   const err = error as AxiosError<{ error?: string }>;
-    //   if (err.request) {
-    //     toast.error(err.response?.data?.error);
-    //   }
-    // },
-  });
-
   const onSubmit = async (data: LoginSchema) => {
     // console.log('Submitting login form with data:', data);
-    mutation.mutate({ username: data.email, password: data.password });
+    dispatch(loginUser({ username: data.email, password: data.password }))
+      .unwrap() // unwrap giúp lấy giá trị trả về của promise nếu thành công
+      .then((response) => {
+        console.log('api trả về ở đây: ', response);
+        localStorage.setItem('userName', response.data.user.username);
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+        toast.success('Login successful!');
+        dispatch(updateUserName());
+        navigate({ to: '/todo' });
+      })
+      .catch((error) => {
+        toast.error('Login failed: ', error);
+      });
   };
 
   return (
@@ -53,12 +43,9 @@ export default function LoginPage() {
       <div className="max-w-md mx-auto mt-10 p-6 bg-white border border-gray-300 rounded shadow">
         <form action="" method="post" onSubmit={form.handleSubmit(onSubmit)}>
           <h1 className="block text-center text-2xl font-bold mb-4">Login to start</h1>
-          {mutation.isError && (
+          {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {(() => {
-                const err = mutation.error as AxiosError<{ error?: string }>;
-                return err.response?.data?.error || 'Login failed. Please try again.';
-              })()}
+              {error}
             </div>
           )}
           <InputAuth
@@ -97,9 +84,9 @@ export default function LoginPage() {
           </a>
           <div className="mb-4 relative w-full">
             <ButtonBasic
-              disabled={mutation.isPending}
+              disabled={loading}
               type="submit"
-              title={mutation.isPending ? 'Loading...' : 'Login'}
+              title={loading ? 'Loading...' : 'Login'}
               className="absolute right-1/2 transform translate-x-1/2 bg-blue-500 hover:bg-blue-700 py-3 px-8 shadow"
             />
           </div>

@@ -1,11 +1,11 @@
 import type { Task } from '@type/TypeTask';
-import TaskComponent from './TaskComponent';
 import type { TaskStatus } from '@type/TypeTask';
-import { useMutation } from '@tanstack/react-query';
-import { updateTodoApi } from '@features/todo/api/todoAPI';
 import { queryClient } from '@main';
 import { toast } from 'react-toastify';
-import type { AxiosError } from 'axios';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@store/store';
+import { getAllTodos, updateTodo } from '@store/todosSlice';
+import TaskComponent from '@shared/components/TaskComponent';
 
 export default function ColumnTask({
   header,
@@ -16,38 +16,34 @@ export default function ColumnTask({
   count: number;
   proptaskList: Task[];
 }) {
-  const mutationDropTask = useMutation({
-    mutationFn: async (newPayloadAPI: Omit<Task, 'createdById' | 'createdAt' | 'updatedAt'>) => {
-      return await updateTodoApi(newPayloadAPI);
-    },
-    onSuccess: () => {
-      // console.log('Cập nhật trạng thái task thành công');
-      queryClient.refetchQueries({ queryKey: ['todos'], exact: true });
-    },
-    onError: (error) => {
-      const err = error as AxiosError<{ error?: string }>;
-      if (err.request) {
-        toast.error(err.response?.data?.error);
-      }
-    },
-  });
+  const dispatch = useDispatch<AppDispatch>();
+
+  function handleOnDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    const data = JSON.parse(queryClient.getQueryData(['taskDragging']) ?? '');
+    // console.log('Đã thả phần tử:', data, 'vào cột', header);
+    const {
+      createdById: _createdById,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      ...payloadAPI
+    } = data;
+    const newPayloadAPI = { ...payloadAPI, status: header };
+    // mutationDropTask.mutate(newPayloadAPI);
+    dispatch(updateTodo(newPayloadAPI))
+      .unwrap() // unwrap giúp lấy giá trị trả về của promise nếu thành công
+      .then(() => {
+        dispatch(getAllTodos()); // Gọi lại danh sách todos
+      })
+      .catch((error) => {
+        toast.error('Cập nhật thất bại:', error);
+      });
+  }
 
   return (
     <div
       onDragOver={(e) => e.preventDefault()}
-      onDrop={(e) => {
-        e.preventDefault();
-        const data = JSON.parse(queryClient.getQueryData(['taskDragging']) ?? '');
-        // console.log('Đã thả phần tử:', data, 'vào cột', header);
-        const {
-          createdById: _createdById,
-          createdAt: _createdAt,
-          updatedAt: _updatedAt,
-          ...payloadAPI
-        } = data;
-        const newPayloadAPI = { ...payloadAPI, status: header };
-        mutationDropTask.mutate(newPayloadAPI);
-      }}
+      onDrop={(e) => handleOnDrop(e)}
       className="flex flex-col flex-shrink-0 w-52 bg-[var(--color-bg)] shadow m-4 rounded p-1 h-fit hover:bg-[var(--color-surface-hover)]"
     >
       <div className="flex justify-between items-center px-2 mb-4 text-[var(--color-text)]">

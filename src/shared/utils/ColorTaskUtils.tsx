@@ -6,18 +6,18 @@ export function getTaskColor(priority: string, endDateString: string): string {
   let bgColr: string = '';
 
   if (dayLeft < 0) {
-    bgColr = 'bg-[var(--task-overdue-bg)] opacity-70';
+    bgColr = '!bg-[var(--task-overdue-bg)] opacity-70';
   } else if (dayLeft < 3) {
     //Còn lại 0 1 2
-    bgColr = 'bg-[var(--task-soon-bg)]';
+    bgColr = '!bg-[var(--task-soon-bg)]';
   } else if (dayLeft <= 5) {
     //Còn lại 3 4 5
-    bgColr = 'bg-[var(--task-medium-bg)]';
+    bgColr = '!bg-[var(--task-medium-bg)]';
   } else if (dayLeft <= 10) {
     //Còn lại 6 -> 10
-    bgColr = 'bg-[var(--task-safe-bg)]';
+    bgColr = '!bg-[var(--task-safe-bg)]';
   } else {
-    bgColr = 'bg-[var(--task-long-bg)]'; //Hơn 10
+    bgColr = '!bg-[var(--task-long-bg)]'; //Hơn 10
   }
 
   const borderLine: Record<string, string> = {
