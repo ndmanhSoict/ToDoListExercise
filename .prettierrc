@@ -1,0 +1,17 @@
+# Cấu hình Prettier theo YAML
+printWidth: 100 # Giới hạn độ dài 1 dòng
+tabWidth: 2 # Số khoảng trắng cho mỗi tab
+useTabs: false # Không dùng tab
+semi: true # Luôn có dấu ; ở cuối câu lệnh
+singleQuote: true # Dùng nháy đơn thay vì nháy kép
+quoteProps: as-needed # Chỉ thêm "" quanh key object khi cần
+jsxSingleQuote: false # Trong JSX vẫn dùng nháy kép
+trailingComma: all # Thêm dấu phẩy ở cuối object/array
+bracketSpacing: true # Có khoảng trắng trong object { a: 1 }
+bracketSameLine: false # Thẻ JSX đóng xuống dòng riêng
+arrowParens: always # Luôn bọc tham số arrow function (x) => {}
+proseWrap: preserve # Giữ nguyên xuống dòng trong Markdown
+htmlWhitespaceSensitivity: css # Nhạy cảm khoảng trắng theo CSS
+endOfLine: lf # Xuống dòng theo Unix (Linux/Mac)
+embeddedLanguageFormatting: auto # Format code trong string (markdown, CSS-in-JS)
+singleAttributePerLine: false # Cho phép nhiều attribute trên 1 dòng JSX

@@ -1,10 +1,95 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import './index.css';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Import route tree được generate tự động
+import { routeTree } from './routeTree.gen';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
+const router = createRouter({ routeTree });
+
+// Khai báo type an toàn
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+//React Query
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Dữ liệu hợp lệ 5 phút
+      gcTime: 1000 * 60 * 10, // Giữ cache 10 phút trước khi xóa
+    },
+  },
+});
+
+const persister = createAsyncStoragePersister({
+  storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+});
+
+//Kích hoạt tính năng persist
+persistQueryClient({
+  queryClient,
+  persister,
+  maxAge: 1000 * 60 * 5, // thời gian tối đa cache tồn tại
+});
+
+export function setTheme(theme?: 'light' | 'dark') {
+  const body = document.querySelector('body');
+  if (!body) return;
+
+  // Nếu không truyền theme -> đọc từ localStorage hoặc hệ thống
+  if (!theme) {
+    const saved = localStorage.getItem('theme');
+    if (saved) theme = saved as 'light' | 'dark';
+    else theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  body.classList.add('theme-transition');
+
+  // Cập nhật class
+  if (theme === 'dark') {
+    body.classList.add('dark');
+    body.classList.remove('light');
+  } else {
+    body.classList.add('light');
+    body.classList.remove('dark');
+  }
+
+  window.setTimeout(() => {
+    body.classList.remove('theme-transition');
+  }, 500); // cùng duration với CSS transition
+
+  // Lưu lại theme hiện tại
+  localStorage.setItem('theme', theme);
+}
+
+const rootElement = document.getElementById('root')!;
+if (!rootElement.innerHTML) {
+  ReactDOM.createRoot(rootElement).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {/* <PersistGate loading={<div>Đang tải dữ liệu...</div>} persistor={persistor}> */}
+            <RouterProvider router={router} />
+            <ToastContainer position="bottom-right" autoClose={2000} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            {/* </PersistGate> */}
+          </LocalizationProvider>
+        </Provider>
+      </QueryClientProvider>
+    </StrictMode>,
+  );
+}
